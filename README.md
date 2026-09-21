@@ -52,7 +52,7 @@ python3 -m http.server 4173
 7. **Photography.** The design is type-and-colour led on purpose (no stock photos). Real photos of
    circles, school sessions and campaigns will lift it further — good spots are the hero, the
    "Our story" section and the programme rows.
-8. **Social links.** Add them to the footer's Contact column when you have handles.
+8. **Social links.** Instagram (@beenetwork) is linked in the footer. LinkedIn currently points at a company search for "BE EMPOWERED NETWORK"; replace it with the page's own URL (linkedin.com/company/...) in `index.html` and re-run the page generator.
 9. **Events.** Edit the `EVENTS` array in `events.js`. Upcoming/past is worked out automatically
    from the dates. The highlight write-ups on `events.html` and the 2024–2025 past events are
    examples in the network's voice; replace them with what actually happened (and add photos).
