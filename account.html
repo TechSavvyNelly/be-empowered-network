@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en-NG">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Newsletter & account — Be Empowered Network</title>
+  <meta name="description" content="Create a free account to RSVP to events, join the newsletter and manage what Be Empowered Network emails you.">
+  <meta property="og:title" content="Newsletter & account — Be Empowered Network">
+  <meta property="og:description" content="Create a free account to RSVP to events, join the newsletter and manage what Be Empowered Network emails you.">
+  <meta property="og:image" content="assets/logo.png">
+  <meta property="og:type" content="website">
+  <link rel="icon" type="image/png" href="assets/mark.png">
+  <link rel="apple-touch-icon" href="assets/mark.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,300..700,0..100;1,9..144,300..700,0..100&display=swap" rel="stylesheet">
+  <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <div class="crisis-bar" role="region" aria-label="Emergency help">
+    <div class="container">
+      <span>If you or someone else is in immediate danger, call <strong><a href="tel:112">112</a></strong> (Nigeria emergency line).</span>
+      <a href="get-help.html">More ways to get help now →</a>
+    </div>
+  </div>
+
+  <header class="site-header">
+    <div class="container container--wide">
+      <a class="brand" href="./" aria-label="Be Empowered Network home">
+        <img src="assets/mark.png" alt="" width="44" height="43">
+        <span class="brand-name">Bee Network<small>Be Empowered Network</small></span>
+      </a>
+      <nav class="nav" aria-label="Primary">
+        <a href="about.html">About</a>
+        <a href="programmes.html">Programmes</a>
+        <a href="events.html">Events</a>
+        <a href="get-help.html">Get help</a>
+        <a href="directory.html">Directory</a>
+        <a href="get-involved.html">Get involved</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+      <div class="header-actions">
+        <button class="icon-btn" type="button" data-theme-toggle aria-label="Switch colour theme"></button>
+        <a class="btn btn--ghost" href="account.html" data-account-link>Sign in</a>
+        <a class="btn btn--primary" href="get-help.html">Get help</a>
+        <button class="icon-btn menu-btn" type="button" data-menu-toggle aria-expanded="false" aria-controls="mobile-menu" aria-label="Open menu">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="mobile-menu" id="mobile-menu" data-menu data-open="false">
+      <ul role="list">
+        <li><a href="about.html">About</a></li>
+        <li><a href="programmes.html">Programmes</a></li>
+        <li><a href="events.html">Events</a></li>
+        <li><a href="get-help.html">Get help</a></li>
+        <li><a href="directory.html">Directory</a></li>
+        <li><a href="get-involved.html">Get involved</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><a href="account.html" data-account-link>Sign in</a></li>
+        <li><a class="btn btn--primary" href="get-help.html">Get help now</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <main id="main">
+
+    <section class="page-head" aria-labelledby="page-title" id="auth-view">
+      <div class="container container--wide">
+        <div class="grid-2" style="align-items: start;">
+          <div>
+            <p class="eyebrow">Newsletter &amp; account</p>
+            <h1 id="page-title">Stay close to the network.</h1>
+            <p class="lede">A free account lets you RSVP to circles and events, choose what we email you, and keep your details in one place.</p>
+            <p id="auth-reason" class="form-status" data-state="ok" hidden style="margin-top: var(--space-6); max-width: 46ch;"></p>
+            <ul class="prose" style="list-style: none; padding: 0; margin-top: var(--space-8); color: var(--color-text-muted);" role="list">
+              <li><strong style="color: var(--color-text);">Monthly newsletter</strong>: what we've been doing, one practical mental-health idea, upcoming dates.</li>
+              <li><strong style="color: var(--color-text);">Event updates</strong>: new circles, trainings and campaign days, with joining links for anything you've RSVP'd to.</li>
+              <li><strong style="color: var(--color-text);">Volunteer opportunities</strong>: only if you opt in.</li>
+            </ul>
+            <p class="form-note" style="margin-top: var(--space-6);">We never share your details. Unsubscribe from any email in one click.</p>
+          </div>
+          <div class="auth-card">
+            <div class="tabs" role="tablist" aria-label="Sign in or create account">
+              <button role="tab" type="button" id="tab-signin" aria-controls="panel-signin" aria-selected="true">Sign in</button>
+              <button role="tab" type="button" id="tab-signup" aria-controls="panel-signup" aria-selected="false" tabindex="-1">Create account</button>
+            </div>
+
+            <div role="tabpanel" id="panel-signin" aria-labelledby="tab-signin">
+              <h2>Welcome back</h2>
+              <p>Sign in to see your RSVPs and email preferences.</p>
+              <form class="form" id="signin-form" novalidate>
+                <div class="field"><label for="si-email">Email</label><input id="si-email" name="email" type="email" autocomplete="email" required></div>
+                <div class="field"><label for="si-pw">Password</label><input id="si-pw" name="password" type="password" autocomplete="current-password" required></div>
+                <button class="btn btn--primary" type="submit">Sign in</button>
+                <p class="form-status" role="alert"></p>
+              </form>
+              <p class="switch-tab">New here? <button type="button" data-switch-tab="panel-signup">Create a free account</button></p>
+            </div>
+
+            <div role="tabpanel" id="panel-signup" aria-labelledby="tab-signup" hidden>
+              <h2>Create your account</h2>
+              <p>Takes about a minute. Choose what you'd like to hear about.</p>
+              <form class="form" id="signup-form" novalidate>
+                <div class="field"><label for="su-name">Full name</label><input id="su-name" name="name" type="text" autocomplete="name" required><span class="field-error"></span></div>
+                <div class="field"><label for="su-email">Email</label><input id="su-email" name="email" type="email" autocomplete="email" required><span class="field-error"></span></div>
+                <div class="field"><label for="su-pw">Password</label><input id="su-pw" name="password" type="password" autocomplete="new-password" minlength="8" required><span class="hint">At least 8 characters.</span><span class="field-error"></span></div>
+                <fieldset class="field">
+                  <legend>Email me about</legend>
+                  <label class="check"><input type="checkbox" name="newsletter" checked><span>Monthly newsletter</span></label>
+                  <label class="check"><input type="checkbox" name="events" checked><span>Events and circles<small>Includes joining details for anything you RSVP to.</small></span></label>
+                  <label class="check"><input type="checkbox" name="volunteering"><span>Volunteer opportunities</span></label>
+                </fieldset>
+                <label class="check"><input type="checkbox" name="consent" required><span>I agree that Be Empowered Network may store my details to run my account and send the emails I've chosen.</span></label>
+                <button class="btn btn--primary" type="submit">Create account</button>
+                <p class="form-status" role="alert"></p>
+              </form>
+              <p class="switch-tab">Already have an account? <button type="button" data-switch-tab="panel-signin">Sign in</button></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="page-head" id="dash-view" hidden aria-labelledby="dash-title">
+      <div class="container container--wide">
+        <div class="dash-head">
+          <div>
+            <p class="eyebrow">Your account</p>
+            <h1 id="dash-title">Hello, <span id="dash-name"></span>.</h1>
+            <p id="dash-email"></p>
+          </div>
+          <button class="btn btn--ghost" type="button" id="signout">Sign out</button>
+        </div>
+        <div class="dash">
+          <div class="dash-card">
+            <h2>Your events</h2>
+            <p>Everything you've RSVP'd to. Joining details are emailed before each event.</p>
+            <ul class="rsvp-list" id="rsvp-list" role="list"></ul>
+            <p style="margin-top: var(--space-5);"><a class="btn btn--primary" href="events.html">Browse events</a></p>
+          </div>
+          <div class="dash-card">
+            <h2>Email preferences</h2>
+            <p>Changes save automatically.</p>
+            <form class="form" id="prefs-form">
+              <div class="pref-list">
+                <label class="check"><input type="checkbox" name="newsletter"><span>Monthly newsletter</span></label>
+                <label class="check"><input type="checkbox" name="events"><span>Events and circles</span></label>
+                <label class="check"><input type="checkbox" name="volunteering"><span>Volunteer opportunities</span></label>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="container container--wide">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a class="brand" href="./" aria-label="Be Empowered Network home">
+            <img src="assets/mark.png" alt="" width="44" height="43">
+            <span class="brand-name">Bee Network<small>Be Empowered Network</small></span>
+          </a>
+          <p>A registered Nigerian non-profit making it normal to talk about mental health, and easier to get help.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Explore</h4>
+          <ul role="list">
+            <li><a href="about.html">About us</a></li>
+            <li><a href="programmes.html">Programmes</a></li>
+            <li><a href="events.html">Events</a></li>
+            <li><a href="get-involved.html">Get involved</a></li>
+            <li><a href="account.html">Newsletter &amp; account</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Contact</h4>
+          <ul role="list">
+            <li><a href="mailto:hello@beempowerednetwork.org">hello@beempowerednetwork.org</a></li>
+            <li><a href="contact.html">Contact form</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Urgent help</h4>
+          <ul role="list">
+            <li><a href="tel:112">Emergency: 112</a></li>
+            <li><a href="get-help.html#helplines">Helplines</a></li>
+            <li><a href="directory.html">Mental health directory</a></li>
+            <li><a href="#" data-open-chat>Talk to Bee (CBT tools)</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© <span data-year>2026</span> Be Empowered Network. Incorporated Trustees, CAC/IT/NO 140796.</span>
+        <span>This website does not provide emergency or clinical services.</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="main.js" defer></script>
+  <script src="auth.js" defer></script>
+  <script src="chat.js" defer></script>
+  <script src="events.js" defer></script>
+  <script src="account.js" defer></script>
+</body>
+</html>

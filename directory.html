@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en-NG">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mental health directory — Be Empowered Network</title>
+  <meta name="description" content="A searchable directory of mental health hospitals, helplines, NGOs and online services across Nigeria.">
+  <meta property="og:title" content="Mental health directory — Be Empowered Network">
+  <meta property="og:description" content="A searchable directory of mental health hospitals, helplines, NGOs and online services across Nigeria.">
+  <meta property="og:image" content="assets/logo.png">
+  <meta property="og:type" content="website">
+  <link rel="icon" type="image/png" href="assets/mark.png">
+  <link rel="apple-touch-icon" href="assets/mark.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,300..700,0..100;1,9..144,300..700,0..100&display=swap" rel="stylesheet">
+  <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <div class="crisis-bar" role="region" aria-label="Emergency help">
+    <div class="container">
+      <span>If you or someone else is in immediate danger, call <strong><a href="tel:112">112</a></strong> (Nigeria emergency line).</span>
+      <a href="get-help.html">More ways to get help now →</a>
+    </div>
+  </div>
+
+  <header class="site-header">
+    <div class="container container--wide">
+      <a class="brand" href="./" aria-label="Be Empowered Network home">
+        <img src="assets/mark.png" alt="" width="44" height="43">
+        <span class="brand-name">Bee Network<small>Be Empowered Network</small></span>
+      </a>
+      <nav class="nav" aria-label="Primary">
+        <a href="about.html">About</a>
+        <a href="programmes.html">Programmes</a>
+        <a href="events.html">Events</a>
+        <a href="get-help.html">Get help</a>
+        <a href="directory.html">Directory</a>
+        <a href="get-involved.html">Get involved</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+      <div class="header-actions">
+        <button class="icon-btn" type="button" data-theme-toggle aria-label="Switch colour theme"></button>
+        <a class="btn btn--ghost" href="account.html" data-account-link>Sign in</a>
+        <a class="btn btn--primary" href="get-help.html">Get help</a>
+        <button class="icon-btn menu-btn" type="button" data-menu-toggle aria-expanded="false" aria-controls="mobile-menu" aria-label="Open menu">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="mobile-menu" id="mobile-menu" data-menu data-open="false">
+      <ul role="list">
+        <li><a href="about.html">About</a></li>
+        <li><a href="programmes.html">Programmes</a></li>
+        <li><a href="events.html">Events</a></li>
+        <li><a href="get-help.html">Get help</a></li>
+        <li><a href="directory.html">Directory</a></li>
+        <li><a href="get-involved.html">Get involved</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><a href="account.html" data-account-link>Sign in</a></li>
+        <li><a class="btn btn--primary" href="get-help.html">Get help now</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <main id="main">
+
+    <section class="page-head" aria-labelledby="page-title">
+      <div class="container container--wide">
+        <p class="eyebrow">Mental health directory</p>
+        <h1 id="page-title">Where to find care in Nigeria.</h1>
+        <p class="lede">Hospitals, helplines, peer-support organisations and online options, in one place. Search by name, or filter by type and state.</p>
+      </div>
+    </section>
+
+    <section class="section section--tight" aria-labelledby="dir-title">
+      <div class="container container--wide">
+        <h2 id="dir-title" class="sr-only">Directory listings</h2>
+        <div class="dir-controls">
+          <div class="field"><label for="dir-search">Search</label><input id="dir-search" type="search" placeholder="e.g. Lagos, helpline, hospital"></div>
+          <div class="field"><label for="dir-type">Type</label>
+            <select id="dir-type"><option value="all">All types</option><option value="helpline">Helplines</option><option value="hospital">Hospitals</option><option value="ngo">NGOs &amp; peer support</option><option value="online">Online</option></select>
+          </div>
+          <div class="field"><label for="dir-state">State</label><select id="dir-state"><option value="all">All states</option></select></div>
+        </div>
+        <p class="dir-count" id="dir-count" aria-live="polite"></p>
+        <ul class="dir-list" role="list" data-directory-list></ul>
+        <div class="involve-card involve-card--wide reveal" style="margin-top: var(--space-10);">
+          <div>
+            <h3>Know a service we should list?</h3>
+            <p>We're building this directory with the community. Tell us about a clinic, therapist, helpline or support group, and we'll check it and add it.</p>
+          </div>
+          <a class="btn btn--primary" href="contact.html?topic=other">Suggest a listing</a>
+        </div>
+        <p class="form-note" style="margin-top: var(--space-6); max-width: 70ch;">This directory is for information only. Listing does not mean endorsement, and details change; please confirm opening hours and fees before travelling. If you are in immediate danger, call 112.</p>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="container container--wide">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a class="brand" href="./" aria-label="Be Empowered Network home">
+            <img src="assets/mark.png" alt="" width="44" height="43">
+            <span class="brand-name">Bee Network<small>Be Empowered Network</small></span>
+          </a>
+          <p>A registered Nigerian non-profit making it normal to talk about mental health, and easier to get help.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Explore</h4>
+          <ul role="list">
+            <li><a href="about.html">About us</a></li>
+            <li><a href="programmes.html">Programmes</a></li>
+            <li><a href="events.html">Events</a></li>
+            <li><a href="get-involved.html">Get involved</a></li>
+            <li><a href="account.html">Newsletter &amp; account</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Contact</h4>
+          <ul role="list">
+            <li><a href="mailto:hello@beempowerednetwork.org">hello@beempowerednetwork.org</a></li>
+            <li><a href="contact.html">Contact form</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Urgent help</h4>
+          <ul role="list">
+            <li><a href="tel:112">Emergency: 112</a></li>
+            <li><a href="get-help.html#helplines">Helplines</a></li>
+            <li><a href="directory.html">Mental health directory</a></li>
+            <li><a href="#" data-open-chat>Talk to Bee (CBT tools)</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© <span data-year>2026</span> Be Empowered Network. Incorporated Trustees, CAC/IT/NO 140796.</span>
+        <span>This website does not provide emergency or clinical services.</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="main.js" defer></script>
+  <script src="auth.js" defer></script>
+  <script src="chat.js" defer></script>
+  <script src="directory.js" defer></script>
+</body>
+</html>
