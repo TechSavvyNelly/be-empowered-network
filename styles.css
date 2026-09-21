@@ -793,3 +793,9 @@ fieldset.field legend { font-size: var(--text-sm); font-weight: 600; margin-bott
 .social a { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; border: 1px solid oklch(1 0 0 / 0.2); color: #fff; }
 .social a:hover { background: var(--brand-amber); color: #2a1a21; border-color: var(--brand-amber); }
 .social svg { width: 18px; height: 18px; }
+
+/* ---- Trustee photos ---- */
+.trustee { align-items: flex-start; }
+.trustee-photo { flex: none; width: 80px; height: 80px; border-radius: 50%; object-fit: cover; object-position: 50% 35%; box-shadow: var(--shadow-md); filter: contrast(1.05) saturate(0.95); }
+.trustee-photo + .initials { display: none; }
+.trustee span + span { display: block; margin-top: 2px; }

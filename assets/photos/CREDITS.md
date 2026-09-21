@@ -7,3 +7,6 @@
 Add your own photos here (circles, sessions, campaigns) and reference them from the pages.
 The home page looks for: `hero.jpg` (wide), `about.jpg` (4:3), `story-1.jpg` … `story-4.jpg` (4:3).
 Each falls back gracefully if the file is missing.
+
+## People
+`assets/founder.jpg` and `assets/people/*.jpg` are supplied by Be Empowered Network (founder and trustees) and used with their permission.
