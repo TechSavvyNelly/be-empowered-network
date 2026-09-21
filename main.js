@@ -91,6 +91,23 @@
     });
   });
 
+  /* ---- Animated counters ---- */
+  const counters = document.querySelectorAll('[data-count]');
+  if (counters.length && 'IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const cio = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (!en.isIntersecting) return; cio.unobserve(en.target);
+        const el = en.target, target = Number(el.getAttribute('data-count')), t0 = performance.now(), dur = 1200;
+        (function tick(now) {
+          const p = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - p, 3);
+          el.textContent = Math.round(target * e).toLocaleString();
+          if (p < 1) requestAnimationFrame(tick);
+        })(t0);
+      });
+    }, { threshold: 0.4 });
+    counters.forEach(function (c) { cio.observe(c); });
+  }
+
   /* ---- Pre-select contact topic from ?topic= ---- */
   const topic = new URLSearchParams(location.search).get('topic');
   const topicSel = document.getElementById('c-topic');

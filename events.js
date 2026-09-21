@@ -66,6 +66,23 @@ window.EVENTS = [
 ];
 
 (function () {
+  /* Compact upcoming-event cards (home page) */
+  const cards = document.querySelector('[data-event-cards]');
+  if (cards) {
+    const M = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    const T = { circle: 'Peer circle', campaign: 'Campaign', training: 'Training', webinar: 'Webinar' };
+    const now = new Date(), limit = Number(cards.getAttribute('data-event-cards')) || 3;
+    const up = window.EVENTS.filter(function (e) { return new Date(e.end) >= now; }).sort(function (a, b) { return a.start < b.start ? -1 : 1; }).slice(0, limit);
+    cards.innerHTML = up.length ? '' : '<li class="empty-state"><p>No events scheduled yet. Check back soon.</p></li>';
+    up.forEach(function (ev) {
+      const d = new Date(ev.start); const li = document.createElement('li'); li.className = 'event-card reveal is-visible';
+      li.innerHTML = '<div class="event-date"><span class="d">' + d.getDate() + '</span><span class="m">' + M[d.getMonth()] + '</span></div>' +
+        '<div><div class="event-meta"><span class="tag">' + (T[ev.type] || ev.type) + '</span><span>' + (ev.mode === 'online' ? 'Online' : 'In person') + '</span></div>' +
+        '<h3>' + ev.title + '</h3><p>' + ev.blurb.split('. ')[0] + '.</p><a href="events.html">Details &amp; RSVP →</a></div>';
+      cards.appendChild(li);
+    });
+  }
+
   const list = document.querySelector('[data-event-list]');
   if (!list) return;
   const filters = document.querySelectorAll('[data-event-filter]');
