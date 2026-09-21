@@ -655,3 +655,9 @@ fieldset.field legend { font-size: var(--text-sm); font-weight: 600; margin-bott
 .founder-quote p { font-family: var(--font-display); font-style: italic; font-size: var(--text-lg); line-height: 1.35; color: var(--color-text); max-width: 30ch; font-variation-settings: 'opsz' 72, 'SOFT' 80; }
 .founder-quote cite { display: block; margin-top: var(--space-3); font-style: normal; font-size: var(--text-xs); color: var(--color-text-muted); }
 @media (min-width: 900px) { .founder { grid-template-columns: 300px 1fr; gap: var(--space-16); align-items: start; } .founder-card { position: sticky; top: calc(72px + var(--space-6)); } }
+
+/* Founder photo: tight head-and-shoulders crop, brand-warm tone, hides initials when present */
+.founder-photo { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; object-position: 50% 30%; border-radius: calc(var(--radius-xl) - var(--space-4)); filter: contrast(1.06) saturate(0.92) brightness(1.02); box-shadow: var(--shadow-md); }
+.founder-photo + .founder-initials { display: none; }
+.founder-card:has(.founder-photo) { padding: var(--space-4) var(--space-4) var(--space-6); }
+.founder-card:has(.founder-photo) strong, .founder-card:has(.founder-photo) span { padding-inline: var(--space-2); }
