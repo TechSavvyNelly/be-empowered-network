@@ -49,6 +49,13 @@ window.DIRECTORY = [
 ];
 
 (function () {
+  /* Live rows from Supabase replace the arrays above when available;
+     data-sync.js resolves before we draw anything. */
+  function boot(go) {
+    if (window.BenData && window.BenData.ready) window.BenData.ready.then(go, go);
+    else go();
+  }
+
   const list = document.querySelector('[data-directory-list]');
   if (!list) return;
   const q = document.getElementById('dir-search');
@@ -95,5 +102,20 @@ window.DIRECTORY = [
     });
   }
   [q, typeSel, stateSel].forEach(function (el) { el.addEventListener('input', render); });
-  render();
+
+  boot(function () {
+    // Live rows may add states the hardcoded list didn't have.
+    if (stateSel) {
+      var have = Array.from(stateSel.options).map(function (o) { return o.value; });
+      Array.from(new Set(window.DIRECTORY.flatMap(function (d) { return d.states; })))
+        .sort()
+        .forEach(function (s) {
+          if (have.indexOf(s) === -1) {
+            var o = document.createElement('option'); o.value = s; o.textContent = s;
+            stateSel.appendChild(o);
+          }
+        });
+    }
+    render();
+  });
 })();

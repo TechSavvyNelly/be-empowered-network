@@ -1,116 +1,120 @@
-/* Be Empowered Network — account page (sign in / create account / dashboard) */
+/* Be Empowered Network — account dashboard, backed by Supabase.
+   Signing in happens on signin.html; this page is what you see after. */
 (function () {
-  const authView = document.getElementById('auth-view');
-  const dashView = document.getElementById('dash-view');
-  if (!authView || !dashView) return;
+  'use strict';
 
-  const params = new URLSearchParams(location.search);
-  const next = params.get('next');
-  const why = params.get('why');
-  const tabs = document.querySelectorAll('[role="tab"]');
-  const panels = document.querySelectorAll('[role="tabpanel"]');
+  var authView = document.getElementById('auth-view');
+  var dashView = document.getElementById('dash-view');
+  if (!dashView) return;
 
-  function selectTab(id) {
-    tabs.forEach(function (t) {
-      const on = t.getAttribute('aria-controls') === id;
-      t.setAttribute('aria-selected', String(on)); t.tabIndex = on ? 0 : -1;
-    });
-    panels.forEach(function (p) { p.hidden = p.id !== id; });
-  }
-  tabs.forEach(function (t) {
-    t.addEventListener('click', function () { selectTab(t.getAttribute('aria-controls')); });
-    t.addEventListener('keydown', function (e) {
-      if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
-      const arr = Array.from(tabs); let i = arr.indexOf(t) + (e.key === 'ArrowRight' ? 1 : -1);
-      i = (i + arr.length) % arr.length; arr[i].focus(); arr[i].click();
-    });
-  });
-  document.querySelectorAll('[data-switch-tab]').forEach(function (b) {
-    b.addEventListener('click', function () { selectTab(b.getAttribute('data-switch-tab')); document.getElementById(b.getAttribute('data-switch-tab')).querySelector('input').focus(); });
-  });
-  if (params.get('tab') === 'signup' || why === 'rsvp') selectTab('panel-signup');
+  var me = null;
 
-  const reason = document.getElementById('auth-reason');
-  if (reason && why === 'rsvp') { reason.textContent = 'Create a free account (or sign in) to RSVP, and we\'ll keep your place and send you the joining details.'; reason.hidden = false; }
-
-  function setError(field, msg) {
-    field.setAttribute('data-invalid', msg ? 'true' : 'false');
-    const el = field.querySelector('.field-error'); if (el) el.textContent = msg || '';
-  }
-  function status(form, state, text) {
-    const s = form.querySelector('.form-status'); if (!s) return;
-    s.setAttribute('data-state', state); s.textContent = text;
+  function toast(text) {
+    var t = document.querySelector('.toast');
+    if (!t) { t = document.createElement('div'); t.className = 'toast'; t.setAttribute('role', 'status'); document.body.appendChild(t); }
+    t.textContent = text; t.setAttribute('data-show', 'true');
+    clearTimeout(t._h); t._h = setTimeout(function () { t.setAttribute('data-show', 'false'); }, 2800);
   }
 
-  /* ---- Sign up ---- */
-  const signup = document.getElementById('signup-form');
-  signup.addEventListener('submit', async function (e) {
-    e.preventDefault();
-    const name = signup.name.value.trim(), email = signup.email.value.trim(), pw = signup.password.value;
-    let ok = true;
-    setError(signup.name.closest('.field'), name ? '' : 'Please tell us your name.'); ok = ok && !!name;
-    const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-    setError(signup.email.closest('.field'), emailOk ? '' : 'That email doesn\'t look right.'); ok = ok && emailOk;
-    setError(signup.password.closest('.field'), pw.length >= 8 ? '' : 'Use at least 8 characters.'); ok = ok && pw.length >= 8;
-    if (!signup.consent.checked) { status(signup, 'err', 'Please agree to how we\'ll use your details.'); return; }
-    if (!ok) return;
-    try {
-      await BenAuth.signUp({ name: name, email: email, password: pw, prefs: {
-        newsletter: signup.newsletter.checked, events: signup.events.checked, volunteering: signup.volunteering.checked } });
-      BenAuth.toast('Welcome, ' + name.split(' ')[0] + '. Your account is ready.');
-      afterAuth();
-    } catch (err) { status(signup, 'err', err.message); }
-  });
-
-  /* ---- Sign in ---- */
-  const signin = document.getElementById('signin-form');
-  signin.addEventListener('submit', async function (e) {
-    e.preventDefault();
-    try {
-      const me = await BenAuth.signIn(signin.email.value, signin.password.value);
-      BenAuth.toast('Signed in as ' + me.name.split(' ')[0] + '.');
-      afterAuth();
-    } catch (err) { status(signin, 'err', err.message); }
-  });
-
-  function afterAuth() {
-    if (next && /^[a-z-]+\.html$/.test(next)) { location.href = next; return; }
-    renderDash();
+  async function load() {
+    if (!window.BenApi || !window.BenApi.ready()) {
+      if (authView) authView.hidden = false;
+      dashView.hidden = true;
+      return;
+    }
+    var user = await window.BenApi.user();
+    if (!user) {
+      // Not signed in: the sign-in page is the single front door.
+      location.href = 'signin.html?next=account.html';
+      return;
+    }
+    me = await window.BenApi.profile();
+    if (authView) authView.hidden = true;
+    dashView.hidden = false;
+    paint(user);
   }
 
-  /* ---- Dashboard ---- */
-  function renderDash() {
-    const me = BenAuth.current();
-    if (!me) { authView.hidden = false; dashView.hidden = true; return; }
-    authView.hidden = true; dashView.hidden = false;
-    document.getElementById('dash-name').textContent = me.name.split(' ')[0];
-    document.getElementById('dash-email').textContent = me.email;
-    const prefs = document.getElementById('prefs-form');
-    prefs.newsletter.checked = !!me.prefs.newsletter;
-    prefs.events.checked = !!me.prefs.events;
-    prefs.volunteering.checked = !!me.prefs.volunteering;
+  async function paint(user) {
+    var first = ((me && me.full_name) || user.email || '').split(' ')[0] || 'there';
+    var nameEl = document.getElementById('dash-name');
+    var mailEl = document.getElementById('dash-email');
+    if (nameEl) nameEl.textContent = first;
+    if (mailEl) mailEl.textContent = user.email || '';
 
-    const ul = document.getElementById('rsvp-list');
-    const events = (window.EVENTS || []).filter(function (ev) { return me.rsvps.indexOf(ev.id) !== -1; })
-      .sort(function (a, b) { return a.start < b.start ? -1 : 1; });
-    ul.innerHTML = events.length ? '' : '<li><span>No RSVPs yet.</span> <a href="events.html">Browse upcoming events →</a></li>';
-    events.forEach(function (ev) {
-      const d = new Date(ev.start);
-      const li = document.createElement('li');
-      li.innerHTML = '<div><strong>' + ev.title + '</strong><br><span>' + d.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' }) + ' · ' + ev.location + '</span></div><button class="btn btn--link" type="button" data-cancel="' + ev.id + '">Cancel</button>';
+    var prefs = document.getElementById('prefs-form');
+    if (prefs && me) {
+      if (prefs.newsletter) prefs.newsletter.checked = !!me.newsletter;
+      if (prefs.events) prefs.events.checked = !!me.events;
+      if (prefs.volunteering) prefs.volunteering.checked = !!me.volunteering;
+    }
+
+    // Admins get a way in.
+    if (me && me.is_admin) {
+      var head = document.querySelector('.dash-head');
+      if (head && !document.getElementById('admin-link')) {
+        var a = document.createElement('a');
+        a.id = 'admin-link'; a.className = 'btn btn--ghost'; a.href = 'admin.html';
+        a.textContent = 'Admin';
+        head.appendChild(a);
+      }
+    }
+
+    await paintRsvps();
+  }
+
+  async function paintRsvps() {
+    var ul = document.getElementById('rsvp-list');
+    if (!ul) return;
+    var ids = await window.BenApi.myRsvps();
+    var all = (await window.BenApi.events()) || [];
+    var mine = all.filter(function (e) { return ids.indexOf(e.id) !== -1; })
+                  .sort(function (a, b) { return a.starts_at < b.starts_at ? -1 : 1; });
+
+    ul.innerHTML = mine.length ? '' :
+      '<li><span>No RSVPs yet.</span> <a href="events.html">Browse upcoming events →</a></li>';
+
+    mine.forEach(function (ev) {
+      var d = new Date(ev.starts_at);
+      var li = document.createElement('li');
+      var when = d.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' });
+      li.innerHTML = '<div><strong></strong><br><span></span></div>' +
+                     '<button class="btn btn--link" type="button" data-cancel="' + ev.id + '">Cancel</button>';
+      li.querySelector('strong').textContent = ev.title;
+      li.querySelector('span').textContent = when + ' · ' + (ev.location || '');
       ul.appendChild(li);
     });
   }
-  document.getElementById('rsvp-list').addEventListener('click', function (e) {
-    const b = e.target.closest('[data-cancel]'); if (!b) return;
-    BenAuth.toggleRsvp(b.getAttribute('data-cancel')); BenAuth.toast('RSVP cancelled.'); renderDash();
-  });
-  document.getElementById('prefs-form').addEventListener('change', function (e) {
-    const f = e.currentTarget;
-    BenAuth.update({ prefs: { newsletter: f.newsletter.checked, events: f.events.checked, volunteering: f.volunteering.checked } });
-    BenAuth.toast('Preferences saved.');
-  });
-  document.getElementById('signout').addEventListener('click', function () { BenAuth.signOut(); BenAuth.toast('Signed out.'); renderDash(); selectTab('panel-signin'); });
 
-  renderDash();
+  var list = document.getElementById('rsvp-list');
+  if (list) list.addEventListener('click', async function (e) {
+    var b = e.target.closest('[data-cancel]');
+    if (!b) return;
+    b.disabled = true;
+    var res = await window.BenApi.toggleRsvp(b.getAttribute('data-cancel'));
+    if (!res.ok) { b.disabled = false; toast('Could not cancel that RSVP.'); return; }
+    toast('RSVP cancelled.');
+    await paintRsvps();
+  });
+
+  var prefsForm = document.getElementById('prefs-form');
+  if (prefsForm) prefsForm.addEventListener('change', async function () {
+    var c = window.BenApi.client();
+    var user = await window.BenApi.user();
+    if (!c || !user) return;
+    var patch = {
+      newsletter: !!prefsForm.newsletter.checked,
+      events: !!prefsForm.events.checked,
+      volunteering: !!prefsForm.volunteering.checked
+    };
+    var r = await c.from('profiles').update(patch).eq('id', user.id);
+    toast(r.error ? 'Could not save your preferences.' : 'Preferences saved.');
+  });
+
+  var out = document.getElementById('signout');
+  if (out) out.addEventListener('click', async function () {
+    await window.BenApi.signOut();
+    location.href = 'signin.html';
+  });
+
+  load();
 })();

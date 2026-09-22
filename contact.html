@@ -96,13 +96,14 @@
             </ul>
           </div>
           <div class="reveal">
-            <form class="form form--2col" data-mailto="hello@beempowerednetwork.org" novalidate>
-              <input type="hidden" name="_subject" value="Message from beempowerednetwork website">
-              <div class="field"><label for="c-name">Full name</label><input id="c-name" name="Name" type="text" autocomplete="name" required></div>
-              <div class="field"><label for="c-email">Email</label><input id="c-email" name="Email" type="email" autocomplete="email" required></div>
+            <form class="form form--2col" id="contact-form" data-enquiry="contact" novalidate>
+              <input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" class="hp">
+              <div class="field"><label for="c-name">Full name</label><input id="c-name" name="name" type="text" autocomplete="name" required></div>
+              <div class="field"><label for="c-email">Email</label><input id="c-email" name="email" type="email" autocomplete="email" required></div>
+              <div class="field"><label for="c-phone">Phone <span class="hint-inline">(optional)</span></label><input id="c-phone" name="phone" type="tel" autocomplete="tel" placeholder="0803 123 4567"><span class="field-error"></span></div>
               <div class="field field--full">
                 <label for="c-topic">I'm getting in touch about</label>
-                <select id="c-topic" name="Topic">
+                <select id="c-topic" name="topic">
                   <option value="support">Getting support for myself</option>
                   <option value="someone">Support for someone I'm worried about</option>
                   <option value="circle">Joining a peer support circle</option>
@@ -113,10 +114,10 @@
                   <option value="other">Something else</option>
                 </select>
               </div>
-              <div class="field field--full"><label for="c-msg">Your message</label><textarea id="c-msg" name="Message" required></textarea><span class="hint">Share only what you're comfortable sharing. We'll never forward your message without asking you.</span></div>
+              <div class="field field--full"><label for="c-msg">Your message</label><textarea id="c-msg" name="message" required></textarea><span class="hint">Share only what you're comfortable sharing. We'll never forward your message without asking you.</span></div>
               <button class="btn btn--primary" type="submit">Send message</button>
               <p class="form-status" role="status" aria-live="polite"></p>
-              <p class="form-note">Submitting opens your email app with the message ready to send.</p>
+              <p class="form-note">We usually reply within two working days. If you are in immediate danger, call <a href="tel:112">112</a>.</p>
             </form>
           </div>
         </div>
@@ -137,7 +138,18 @@
           <div class="social" aria-label="Social media">
             <a href="https://www.instagram.com/beenetwork/" target="_blank" rel="noopener" aria-label="Instagram: @beenetwork"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></a>
             <a href="https://www.linkedin.com/search/results/companies/?keywords=BE%20EMPOWERED%20NETWORK" target="_blank" rel="noopener" aria-label="LinkedIn: Be Empowered Network"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.5 8.5h-3V21h3V8.5zM5 3.5a1.75 1.75 0 1 0 0 3.5 1.75 1.75 0 0 0 0-3.5zM21 13.6c0-3.3-1.8-5.3-4.6-5.3-1.6 0-2.7.8-3.3 1.7V8.5h-3V21h3v-6.6c0-1.6.7-2.7 2.2-2.7s2 1.1 2 2.7V21h3v-7.4z"/></svg></a>
-          </div>
+                    <form class="form newsletter-form" data-subscribe="footer" novalidate>
+            <label for="nl-email-contact">Get our monthly newsletter</label>
+            <div class="newsletter-row">
+              <input id="nl-email-contact" name="email" type="email" autocomplete="email" placeholder="you@example.com" required>
+              <button class="btn btn--primary" type="submit">Subscribe</button>
+            </div>
+            <input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" class="hp">
+            <span class="field-error"></span>
+            <p class="form-status" role="status" aria-live="polite" hidden></p>
+            <p class="form-note">One email a month. Unsubscribe in one click.</p>
+          </form>
+        </div>
         </div>
         <div class="footer-col">
           <h4>Explore</h4>
@@ -174,7 +186,13 @@
     </div>
   </footer>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+  <script src="supabase-config.js"></script>
+  <script src="api.js" defer></script>
+  <script src="data-sync.js" defer></script>
   <script src="main.js" defer></script>
+  <script src="validate.js" defer></script>
+  <script src="forms.js" defer></script>
   <script src="auth.js" defer></script>
   <script src="chat.js" defer></script>
   <script src="events.js" defer></script>

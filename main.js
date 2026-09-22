@@ -66,30 +66,9 @@
     revealEls.forEach(function (el) { el.classList.add('is-visible'); });
   }
 
-  /* ---- Forms: no backend yet, so compose an email from the fields ----
-     Replace this with a Formspree / Netlify Forms / own API endpoint when ready. */
-  document.querySelectorAll('form[data-mailto]').forEach(function (form) {
-    form.addEventListener('submit', function (e) {
-      e.preventDefault();
-      const status = form.querySelector('.form-status');
-      if (!form.checkValidity()) {
-        form.reportValidity();
-        return;
-      }
-      const data = new FormData(form);
-      const lines = [];
-      data.forEach(function (v, k) { if (k !== '_subject') lines.push(k.replace(/_/g, ' ') + ': ' + v); });
-      const subject = data.get('_subject') || 'Message from beempowerednetwork website';
-      const href = 'mailto:' + form.getAttribute('data-mailto') +
-        '?subject=' + encodeURIComponent(subject) +
-        '&body=' + encodeURIComponent(lines.join('\n'));
-      window.location.href = href;
-      if (status) {
-        status.setAttribute('data-state', 'ok');
-        status.textContent = 'Your email app should now open with your message ready to send. If it did not, email us directly at ' + form.getAttribute('data-mailto') + '.';
-      }
-    });
-  });
+  /* Form submission now lives in forms.js, posting to Supabase Edge
+     Functions. The old mailto: fallback was removed: it silently failed
+     for anyone without a configured mail client, which is most phones. */
 
   /* ---- Animated counters ---- */
   const counters = document.querySelectorAll('[data-count]');

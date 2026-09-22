@@ -1,4 +1,10 @@
 User-agent: *
 Allow: /
 
+# Account and admin pages hold nothing useful to a crawler.
+Disallow: /admin.html
+Disallow: /account.html
+Disallow: /signin.html
+Disallow: /newsletter.html
+
 Sitemap: https://beempowerednetwork.org/sitemap.xml

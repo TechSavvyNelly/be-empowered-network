@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en-NG">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Admin — Be Empowered Network</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" type="image/png" href="assets/mark.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,300..700,0..100;1,9..144,300..700,0..100&display=swap" rel="stylesheet">
+  <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css?v=4">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <div class="crisis-bar" role="region" aria-label="Emergency help">
+    <div class="container">
+      <span>If you or someone else is in immediate danger, call <strong><a href="tel:112">112</a></strong> (Nigeria emergency line).</span>
+      <a href="get-help.html">More ways to get help now →</a>
+    </div>
+  </div>
+
+  <header class="site-header">
+    <div class="container container--wide">
+      <a class="brand" href="./" aria-label="Be Empowered Network home">
+        <img src="assets/mark.png" alt="" width="44" height="43">
+        <span class="brand-name">Bee Network<small>Be Empowered Network</small></span>
+      </a>
+      <nav class="nav" aria-label="Primary">
+        <a href="about.html">About</a>
+        <a href="programmes.html">Programmes</a>
+        <a href="events.html">Events</a>
+        <a href="get-help.html">Get help</a>
+        <a href="directory.html">Directory</a>
+        <a href="get-involved.html">Get involved</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+      <div class="header-actions">
+        <button class="icon-btn" type="button" data-theme-toggle aria-label="Switch colour theme"></button>
+        <a class="btn btn--ghost" href="signin.html" data-account-link>Sign in</a>
+        <a class="btn btn--primary" href="get-help.html">Get help</a>
+        <button class="icon-btn menu-btn" type="button" data-menu-toggle aria-expanded="false" aria-controls="mobile-menu" aria-label="Open menu">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="mobile-menu" id="mobile-menu" data-menu data-open="false">
+      <ul role="list">
+        <li><a href="about.html">About</a></li>
+        <li><a href="programmes.html">Programmes</a></li>
+        <li><a href="events.html">Events</a></li>
+        <li><a href="get-help.html">Get help</a></li>
+        <li><a href="directory.html">Directory</a></li>
+        <li><a href="get-involved.html">Get involved</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><a href="signin.html" data-account-link>Sign in</a></li>
+        <li><a class="btn btn--primary" href="get-help.html">Get help now</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="page-head">
+      <div class="container container--wide">
+
+        <p class="form-status" id="admin-gate" data-state="err">Checking your access…</p>
+
+        <div id="admin-body" hidden>
+          <p class="eyebrow">Admin</p>
+          <h1>Manage the site</h1>
+
+          <div class="tabs" role="tablist" aria-label="Admin sections" style="margin-top: var(--space-8);">
+            <button role="tab" type="button" id="t-enq" aria-controls="p-enq" aria-selected="true">Enquiries</button>
+            <button role="tab" type="button" id="t-subs" aria-controls="p-subs" aria-selected="false" tabindex="-1">Subscribers</button>
+            <button role="tab" type="button" id="t-news" aria-controls="p-news" aria-selected="false" tabindex="-1">Newsletter</button>
+            <button role="tab" type="button" id="t-evt" aria-controls="p-evt" aria-selected="false" tabindex="-1">Events</button>
+            <button role="tab" type="button" id="t-dir" aria-controls="p-dir" aria-selected="false" tabindex="-1">Directory</button>
+          </div>
+
+          <div role="tabpanel" id="p-enq" aria-labelledby="t-enq">
+            <h2>Enquiries</h2>
+            <p class="form-note">Messages from the contact and volunteering forms.</p>
+            <ul class="admin-list" id="enq-list" role="list"></ul>
+          </div>
+
+          <div role="tabpanel" id="p-subs" aria-labelledby="t-subs" hidden>
+            <h2>Newsletter subscribers</h2>
+            <p class="form-note" id="subs-count"></p>
+            <ul class="admin-list" id="subs-list" role="list"></ul>
+          </div>
+
+          <div role="tabpanel" id="p-news" aria-labelledby="t-news" hidden>
+            <h2>Send a newsletter</h2>
+            <p class="form-note">Test sends go only to you. A real send goes to every confirmed subscriber and cannot be undone.</p>
+            <form class="form" id="campaign-form" novalidate>
+              <div class="field"><label for="cp-subject">Subject</label><input id="cp-subject" name="subject" type="text" required><span class="field-error"></span></div>
+              <div class="field"><label for="cp-body">Body (HTML allowed)</label><textarea id="cp-body" name="body_html" rows="12" required></textarea><span class="field-error"></span></div>
+              <div class="newsletter-row">
+                <button class="btn btn--ghost" type="button" id="cp-test">Send test to me</button>
+                <button class="btn btn--primary" type="submit">Send to all confirmed</button>
+              </div>
+              <p class="form-status" role="alert" hidden></p>
+            </form>
+            <h3 style="margin-top: var(--space-10);">Past campaigns</h3>
+            <ul class="admin-list" id="cp-list" role="list"></ul>
+          </div>
+
+          <div role="tabpanel" id="p-evt" aria-labelledby="t-evt" hidden>
+            <h2>Events</h2>
+            <form class="form form--2col" id="event-form" novalidate>
+              <div class="field"><label for="ev-id">ID (slug)</label><input id="ev-id" name="id" type="text" placeholder="circle-2026-12-05" required></div>
+              <div class="field"><label for="ev-title">Title</label><input id="ev-title" name="title" type="text" required></div>
+              <div class="field"><label for="ev-start">Starts</label><input id="ev-start" name="starts_at" type="datetime-local" required></div>
+              <div class="field"><label for="ev-end">Ends</label><input id="ev-end" name="ends_at" type="datetime-local"></div>
+              <div class="field"><label for="ev-mode">Mode</label><select id="ev-mode" name="mode"><option value="online">Online</option><option value="in-person">In person</option><option value="hybrid">Hybrid</option></select></div>
+              <div class="field"><label for="ev-loc">Location</label><input id="ev-loc" name="location" type="text"></div>
+              <div class="field field--full"><label for="ev-sum">Summary</label><textarea id="ev-sum" name="summary" rows="3"></textarea></div>
+              <button class="btn btn--primary" type="submit">Save event</button>
+              <p class="form-status" role="alert" hidden></p>
+            </form>
+            <ul class="admin-list" id="evt-list" role="list"></ul>
+          </div>
+
+          <div role="tabpanel" id="p-dir" aria-labelledby="t-dir" hidden>
+            <h2>Directory</h2>
+            <form class="form form--2col" id="dir-form" novalidate>
+              <div class="field"><label for="dr-name">Name</label><input id="dr-name" name="name" type="text" required></div>
+              <div class="field"><label for="dr-cat">Category</label><select id="dr-cat" name="category"><option value="hospital">Hospital</option><option value="helpline">Helpline</option><option value="ngo">NGO</option><option value="online">Online service</option></select></div>
+              <div class="field"><label for="dr-state">States (comma separated)</label><input id="dr-state" name="state" type="text" placeholder="Lagos, Nationwide"></div>
+              <div class="field"><label for="dr-phone">Phone</label><input id="dr-phone" name="phone" type="text"></div>
+              <div class="field"><label for="dr-url">Website</label><input id="dr-url" name="url" type="url"></div>
+              <div class="field field--full"><label for="dr-desc">Description</label><textarea id="dr-desc" name="description" rows="3"></textarea></div>
+              <button class="btn btn--primary" type="submit">Save entry</button>
+              <p class="form-status" role="alert" hidden></p>
+            </form>
+            <ul class="admin-list" id="dir-list" role="list"></ul>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+  <script src="supabase-config.js"></script>
+  <script src="api.js" defer></script>
+  <script src="main.js" defer></script>
+  <script src="admin.js" defer></script>
+</body>
+</html>

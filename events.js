@@ -66,6 +66,27 @@ window.EVENTS = [
 ];
 
 (function () {
+  /* Live rows from Supabase replace the arrays above when available;
+     data-sync.js resolves before we draw anything. */
+  var MY_RSVPS = [];
+  function refreshRsvps() {
+    if (!window.BenApi || !window.BenApi.ready()) return Promise.resolve([]);
+    return window.BenApi.myRsvps().then(function (ids) { MY_RSVPS = ids || []; return MY_RSVPS; });
+  }
+  function isGoing(id) { return MY_RSVPS.indexOf(id) !== -1; }
+  function toast(text) {
+    if (window.BenAuth && BenAuth.toast) return BenAuth.toast(text);
+    var t = document.querySelector('.toast');
+    if (!t) { t = document.createElement('div'); t.className = 'toast'; t.setAttribute('role', 'status'); document.body.appendChild(t); }
+    t.textContent = text; t.setAttribute('data-show', 'true');
+    clearTimeout(t._h); t._h = setTimeout(function () { t.setAttribute('data-show', 'false'); }, 2800);
+  }
+
+  function boot(go) {
+    if (window.BenData && window.BenData.ready) window.BenData.ready.then(go, go);
+    else go();
+  }
+
   /* Compact upcoming-event cards (home page) */
   const cards = document.querySelector('[data-event-cards]');
   if (cards) {
@@ -107,7 +128,6 @@ window.EVENTS = [
   }
 
   function render() {
-    const me = window.BenAuth && BenAuth.current();
     const now = new Date();
     const items = window.EVENTS
       .filter(function (e) { return filter === 'all' || e.mode === filter || e.type === filter; })
@@ -125,7 +145,7 @@ window.EVENTS = [
     upcoming.concat(past).forEach(function (ev) {
       const d = new Date(ev.start);
       const isPast = new Date(ev.end) < now;
-      const going = me && me.rsvps.indexOf(ev.id) !== -1;
+      const going = isGoing(ev.id);
       const li = document.createElement('li');
       li.className = 'event' + (isPast ? ' event--past' : '');
       li.innerHTML =
@@ -148,12 +168,19 @@ window.EVENTS = [
     const rsvp = e.target.closest('[data-rsvp]');
     const cal = e.target.closest('[data-ics]');
     if (rsvp) {
-      const me = window.BenAuth && BenAuth.current();
-      if (!me) { location.href = 'account.html?next=events.html&why=rsvp'; return; }
-      const after = BenAuth.toggleRsvp(rsvp.getAttribute('data-rsvp'));
-      const nowGoing = after.rsvps.indexOf(rsvp.getAttribute('data-rsvp')) !== -1;
-      BenAuth.toast(nowGoing ? 'RSVP saved. See you there.' : 'RSVP cancelled.');
-      render();
+      e.preventDefault();
+      const id = rsvp.getAttribute('data-rsvp');
+      rsvp.disabled = true;
+      window.BenApi.toggleRsvp(id).then(function (res) {
+        rsvp.disabled = false;
+        if (!res.ok && res.error === 'signed-out') {
+          location.href = 'signin.html?next=events.html&tab=signup';
+          return;
+        }
+        if (!res.ok) { toast('We could not save that RSVP. Please try again.'); return; }
+        toast(res.rsvped ? 'RSVP saved. See you there.' : 'RSVP cancelled.');
+        refreshRsvps().then(render);
+      });
     }
     if (cal) {
       e.preventDefault();
@@ -172,5 +199,5 @@ window.EVENTS = [
     });
   });
 
-  render();
+  boot(function () { refreshRsvps().then(render, render); });
 })();

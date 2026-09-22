@@ -2,3 +2,5 @@
 _light-*.html
 _*.html
 node_modules
+.env
+.env.*

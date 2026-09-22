@@ -833,3 +833,24 @@ fieldset.field legend { font-size: var(--text-sm); font-weight: 600; margin-bott
 }
 
 .form-status[hidden] { display: none; }
+
+/* Newsletter sign-up + honeypot */
+.hp { position: absolute !important; left: -9999px !important; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+.newsletter-form { margin-top: var(--space-6); gap: var(--space-2); }
+.newsletter-form label { font-size: var(--text-sm); font-weight: 600; }
+.newsletter-row { display: flex; gap: var(--space-2); flex-wrap: wrap; }
+.newsletter-row input { flex: 1 1 12rem; min-width: 0; }
+.newsletter-row .btn { flex: none; }
+.hint-inline { font-weight: 400; color: var(--color-text-muted); }
+.site-footer--dark .newsletter-form label,
+.site-footer--dark .newsletter-form .form-note { color: inherit; opacity: .85; }
+
+/* Admin */
+.admin-list { list-style: none; padding: 0; margin-top: var(--space-6); display: grid; gap: var(--space-3); }
+.admin-item {
+  display: flex; gap: var(--space-4); justify-content: space-between; align-items: flex-start;
+  flex-wrap: wrap; padding: var(--space-4);
+  background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-lg);
+  font-size: var(--text-sm);
+}
+.admin-item p { margin-top: var(--space-2); white-space: pre-wrap; color: var(--color-text-muted); }
