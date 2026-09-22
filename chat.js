@@ -107,15 +107,87 @@
     });
   }
 
-  /* ---------- Safety ---------- */
-  const CRISIS = /\b(suicid|kill (myself|me)|end (my|it all)|end my life|take my (own )?life|want to die|don'?t want to (live|be alive|be here)|better off (dead|without me)|hurt(ing)? myself|self[- ]?harm|cut(ting)? myself|overdose|no reason to live)\b/i;
+  /* ---------- Language ---------- */
+  const COPY = window.BEE_COPY || { en: {}, pcm: {} };
+  let lang = 'en';
+  try { lang = localStorage.getItem('ben-chat-lang') || 'en'; } catch (e) {}
+  if (lang !== 'pcm') lang = 'en';
+  let langAsked = false;
+
+  function t(key) {
+    const table = COPY[lang] || COPY.en;
+    return (table && table[key]) || (COPY.en && COPY.en[key]) || '';
+  }
+  function setLang(next) {
+    lang = next === 'pcm' ? 'pcm' : 'en';
+    try { localStorage.setItem('ben-chat-lang', lang); } catch (e) {}
+    input.placeholder = t('ui.placeholder');
+    const role = panel.querySelector('.chat-head small');
+    if (role) role.textContent = t('ui.role');
+    const notice = panel.querySelector('.chat-notice');
+    if (notice) notice.innerHTML = t('ui.notice');
+  }
+
+  /* Nigerian Pidgin markers. Some words ("dey", "wey", "abeg") are strong
+     on their own; commoner ones only count together, so an English
+     sentence that happens to contain "na" isn't misread. */
+  const PCM_STRONG = /\b(wetin|abeg|wahala|sabi|una|comot|kom[o]?t|gbege|biko|oyinbo|nawa|shey|abi|wey)\b/i;
+  const PCM_WEAK = /\b(dey|don|go dey|na|no be|make i|e be|e dey|im|dem|sha|waka|vex|small small|no gree)\b/i;
+
+  function looksPidgin(text) {
+    if (PCM_STRONG.test(text)) return true;
+    const hits = (text.toLowerCase().match(new RegExp(PCM_WEAK.source, 'gi')) || []).length;
+    return hits >= 2;
+  }
+  function looksEnglishOnly(text) {
+    return !PCM_STRONG.test(text) && !PCM_WEAK.test(text) && text.split(/\s+/).length >= 4;
+  }
+
+  /* ---------- Safety ----------
+     Both languages are screened on EVERY message regardless of the
+     language Bee is currently speaking. Someone in distress switches
+     register mid-sentence, and missing that is the one failure here
+     that actually matters. */
+  /* "suicid" is matched as a prefix (suicide, suicidal, suicidality) with no
+     trailing word boundary -- an earlier version required one, which meant
+     the word "suicide" itself never matched. */
+  const CRISIS_EN = new RegExp(
+    '\\bsuicid' +
+    '|\\b(kill\\s*(myself|me)|end\\s*(my\\s*life|it\\s*all)|take\\s*my\\s*(own\\s*)?life' +
+    '|want(ing)?\\s*to\\s*die|wanna\\s*die|don\'?t\\s*want\\s*to\\s*(live|be\\s*alive|be\\s*here)' +
+    '|better\\s*off\\s*(dead|without\\s*me)|hurt(ing)?\\s*myself|self[-\\s]?harm' +
+    '|cut(ting)?\\s*myself|overdose|no\\s*reason\\s*to\\s*live|nothing\\s*to\\s*live\\s*for)\\b', 'i');
+
+  /* The only benign use common enough to carve out. Everything else that
+     trips the net is left tripping it: showing a helpline to someone who
+     was joking costs a moment of awkwardness, missing someone who wasn't
+     costs far more. The asymmetry is deliberate. */
+  const NOT_CRISIS = /\b(die|dying)\s*(of|from)?\s*(laughter|laughing|embarrassment)\b|\bdie\s*laughing\b/i;
+
+  const CRISIS_PCM = new RegExp(
+    '(\\bi\\s*(wan|won|wanna|want)\\s*(die|kill\\s*myself|end\\s*am|end\\s*my\\s*life)\\b)' +
+    '|(\\bmake\\s*i\\s*(die|just\\s*die|kill\\s*myself|comot|kom[o]?t)\\b)' +
+    '|(\\bi\\s*no\\s*(wan|won|want)\\s*(live|dey|dey\\s*alive|dey\\s*here|see\\s*tomorrow)\\b)' +
+    '|(\\bi\\s*(go|wan|won)\\s*kill\\s*(myself|my\\s*self)\\b)' +
+    '|(\\bi\\s*don\\s*tire\\s*(for|to)\\s*(life|dey|live)\\b)' +
+    '|(\\blife\\s*no\\s*(get|make)\\s*(meaning|sense)\\b)' +
+    '|(\\be\\s*better\\s*(make\\s*i|if\\s*i)\\s*(die|no\\s*dey)\\b)' +
+    '|(\\bi\\s*(wan|won|dey)\\s*(hurt|injure|wound|cut)\\s*(myself|my\\s*body|my\\s*self)\\b)' +
+    '|(\\bnobody\\s*(go|dey)\\s*(miss|notice)\\s*me\\b)' +
+    '|(\\bi\\s*be\\s*burden\\b)' +
+    '|(\\bi\\s*wan\\s*comot\\s*for\\s*(this\\s*)?(world|life)\\b)', 'i');
+
+  function isCrisis(text) {
+    if (NOT_CRISIS.test(text)) return false;
+    return CRISIS_EN.test(text) || CRISIS_PCM.test(text);
+  }
+  window.BeeSafety = { isCrisis: isCrisis, looksPidgin: looksPidgin };
+
   function crisisReply() {
-    bot('<p>Thank you for telling me. What you just said matters, and I want to make sure you get more than a chatbot right now.</p>' +
-        '<p><strong>If you are in immediate danger:</strong><a class="num-big" href="tel:112">Call 112</a>' +
-        '<strong>To talk to a person now:</strong></p><ul><li>MANI: <a href="tel:+2348091116264">0809 111 6264</a></li><li>NSPI: <a href="tel:+2348062106493">0806 210 6493</a></li></ul>' +
-        '<p>If you can, tell someone near you how you feel, or go to the nearest hospital. You deserve support from a real person tonight, not just from me.</p>', 'msg--crisis');
+    bot(t('crisis.say'), 'msg--crisis');
     gen = null;
-    setChips([{ label: 'Show all helplines', value: '__helplines' }, { label: 'I\'m safe. Keep going', value: '__menu' }]);
+    setChips([{ label: t('crisis.helplines'), value: '__helplines' },
+              { label: t('crisis.safe'), value: '__menu' }]);
     setInput('chips');
   }
 
@@ -131,176 +203,237 @@
     while (!r.done) {
       const s = r.value;
       if (s.say) { await typing(Math.min(1400, 350 + s.say.length * 4)); bot(s.say, s.cls); }
-      if (s.input === 'scale') { const v = await scaleWidget(s.label || 'How strong is it right now?'); r = gen.next(v); continue; }
+      if (s.input === 'scale') { const v = await scaleWidget(s.label || t('scale.anxiety')); r = gen.next(v); continue; }
       if (s.input === 'breath') { setChips([]); setInput('none'); await breathWidget(s.cycles || 4); r = gen.next(); continue; }
       if (s.input === 'pause') { r = gen.next(); continue; }
       setChips(s.chips); setInput(s.input || 'text');
-      if (s.end) gen = null; // hand control back to free-text routing
-      return; // wait for the person
+      if (s.end) gen = null;
+      return;
     }
     gen = null;
     await typing(500);
     menu(true);
   }
+
   function handle(value, label) {
-    if (value === '__menu') { user(label || 'Back to the menu'); gen = null; menu(); return; }
+    if (value === '__menu') { user(label || t('menu.back')); gen = null; menu(); return; }
     if (value === '__helplines') { user(label); gen = null; helplines(); return; }
     if (value === '__close') { close(); return; }
-    if (typeof value === 'string' && value.indexOf('__flow:') === 0) { user(label); const f = FLOWS[value.slice(7)]; if (f) { run(f); } return; }
+    if (value === '__lang:pcm' || value === '__lang:en') {
+      user(label);
+      setLang(value.slice(7));
+      langAsked = true;
+      bot(t('ui.langSwitched'));
+      gen = null;
+      menu(true);
+      return;
+    }
+    if (value === '__lang:keep') { user(label); langAsked = true; gen = null; menu(true); return; }
+    if (typeof value === 'string' && value.indexOf('__flow:') === 0) {
+      user(label); const f = FLOWS[value.slice(7)]; if (f) run(f); return;
+    }
+
     user(label || value);
-    if (typeof value === 'string' && CRISIS.test(value)) { crisisReply(); return; }
+
+    /* Safety is checked before anything else, and before language. */
+    if (typeof value === 'string' && isCrisis(value)) { crisisReply(); return; }
+
+    /* Offer to switch language, once, when the person's own words say so. */
+    if (!langAsked && typeof value === 'string' && value.length > 8) {
+      if (lang === 'en' && looksPidgin(value)) {
+        langAsked = true;
+        bot(COPY.en['ui.langOffer']);
+        setChips([{ label: COPY.en['ui.langOfferYes'], value: '__lang:pcm' },
+                  { label: COPY.en['ui.langOfferNo'], value: '__lang:keep' }]);
+        setInput('chips');
+        return;
+      }
+      if (lang === 'pcm' && looksEnglishOnly(value)) {
+        langAsked = true;
+        bot(COPY.pcm['ui.langOffer']);
+        setChips([{ label: COPY.pcm['ui.langOfferYes'], value: '__lang:en' },
+                  { label: COPY.pcm['ui.langOfferNo'], value: '__lang:keep' }]);
+        setInput('chips');
+        return;
+      }
+    }
+
     if (gen) { step(value); } else { route(value); }
   }
+
   form.addEventListener('submit', function (e) {
     e.preventDefault();
     const v = input.value.trim(); if (!v) return;
     input.value = ''; handle(v);
   });
 
-  const MENU_CHIPS = [
-    { label: 'I\'m anxious', value: '__flow:anxious' },
-    { label: 'I\'m feeling low', value: '__flow:low' },
-    { label: 'I can\'t stop overthinking', value: '__flow:worry' },
-    { label: 'Challenge a thought', value: '__flow:thought' },
-    { label: 'Breathe with me', value: '__flow:breathe' },
-    { label: 'Ground me', value: '__flow:ground' },
-    { label: 'I can\'t sleep', value: '__flow:sleep' },
-    { label: 'Just talk', value: '__flow:talk' }
-  ];
+  function menuChips() {
+    return [
+      { label: t('menu.anxious'), value: '__flow:anxious' },
+      { label: t('menu.low'), value: '__flow:low' },
+      { label: t('menu.worry'), value: '__flow:worry' },
+      { label: t('menu.thought'), value: '__flow:thought' },
+      { label: t('menu.traps'), value: '__flow:traps' },
+      { label: t('menu.breathe'), value: '__flow:breathe' },
+      { label: t('menu.ground'), value: '__flow:ground' },
+      { label: t('menu.sleep'), value: '__flow:sleep' },
+      { label: t('menu.talk'), value: '__flow:talk' },
+      { label: t('ui.langSwitch'), value: lang === 'en' ? '__lang:pcm' : '__lang:en' }
+    ];
+  }
   function menu(afterTool) {
-    bot(afterTool ? '<p>What would you like to do next?</p>' : '<p>What\'s going on for you right now? Pick one, or type in your own words.</p>');
-    setChips(MENU_CHIPS); setInput('text');
+    bot(afterTool ? t('menu.again') : t('menu.prompt'));
+    setChips(menuChips()); setInput('text');
   }
   function helplines() {
-    bot('<p><strong>Emergency (Nigeria):</strong> <a href="tel:112">112</a></p><p><strong>MANI:</strong> <a href="tel:+2348091116264">0809 111 6264</a><br><strong>NSPI:</strong> <a href="tel:+2348062106493">0806 210 6493</a></p><p><a href="get-help.html">All support options →</a></p>', 'msg--crisis');
-    setChips([{ label: 'Back to the menu', value: '__menu' }]); setInput('text');
+    bot(t('helplines.say'), 'msg--crisis');
+    setChips([{ label: t('menu.back'), value: '__menu' }]); setInput('text');
   }
-  /* Free-text routing when no exercise is running */
+
+  /* ---------- Free-text routing ---------- */
   function route(text) {
-    const t = text.toLowerCase();
+    const s = text.toLowerCase();
     const pick = function (name) { run(FLOWS[name]); };
-    if (/panic|anxi|nervous|scared|afraid|fear|tense|on edge|racing/.test(t)) return pick('anxious');
-    if (/sad|low|depress|empty|hopeless|numb|tired of|unmotivated|can'?t get up|no energy|cry/.test(t)) return pick('low');
-    if (/overthink|worry|worried|what if|can'?t stop thinking|ruminat|stuck in my head/.test(t)) return pick('worry');
-    if (/sleep|insomnia|awake|tired|exhausted/.test(t)) return pick('sleep');
-    if (/breath/.test(t)) return pick('breathe');
-    if (/ground|overwhelm|dissociat|spacey|unreal/.test(t)) return pick('ground');
-    if (/thought|believe|i'?m (a )?(failure|useless|worthless|stupid)|everyone|nobody|always|never/.test(t)) return pick('thought');
-    if (/help ?line|number|call|emergency/.test(t)) return helplines();
-    if (/^(hi|hello|hey|good (morning|afternoon|evening))\b/.test(t)) { bot('<p>Hello. I\'m glad you\'re here.</p>'); return menu(); }
-    if (/thank/.test(t)) { bot('<p>You\'re welcome. Come back any time.</p>'); return menu(true); }
+    if (/panic|anxi|nervous|scared|afraid|fear|tense|on edge|racing|fear dey|mind no dey rest|heart dey beat/.test(s)) return pick('anxious');
+    if (/sad|low|depress|empty|hopeless|numb|tired of|unmotivated|can'?t get up|no energy|cry|i dey down|weak body|no strength/.test(s)) return pick('low');
+    if (/overthink|worry|worried|what if|can'?t stop thinking|ruminat|stuck in my head|too much thinking|my mind full/.test(s)) return pick('worry');
+    if (/sleep|insomnia|awake|tired|exhausted|no fit sleep|eye no dey close/.test(s)) return pick('sleep');
+    if (/breath|breathe/.test(s)) return pick('breathe');
+    if (/ground|overwhelm|dissociat|spacey|unreal|i dey lost/.test(s)) return pick('ground');
+    if (/trap|distort|always|never|everyone|nobody/.test(s)) return pick('traps');
+    if (/thought|believe|i'?m (a )?(failure|useless|worthless|stupid)|i be (mumu|useless|failure)/.test(s)) return pick('thought');
+    if (/help ?line|number|call|emergency|abeg help/.test(s)) return helplines();
+    if (/^(hi|hello|hey|good (morning|afternoon|evening)|how far|how you dey|abeg)\b/.test(s)) { bot('<p>' + (lang === 'pcm' ? 'How far. I glad say you come.' : 'Hello. I’m glad you’re here.') + '</p>'); return menu(); }
+    if (/thank/.test(s)) { bot('<p>' + (lang === 'pcm' ? 'No wahala. Come back any time.' : 'You’re welcome. Come back any time.') + '</p>'); return menu(true); }
     return run(FLOWS.talk, text);
   }
 
-  /* ---------- Flows (generators) ---------- */
+  /* ---------- Flows ----------
+     Each is a generator: yield what Bee says and what input to wait for.
+     They ask questions and reflect; they never diagnose, never advise on
+     medication, and never tell anyone what their thought "really" means. */
+
   function* welcome() {
-    yield { say: '<p>Hi, I\'m Bee. I\'m not a person and I\'m not therapy, but I can walk you through a few tools from cognitive behavioural therapy (CBT) that many people find useful when things get heavy.</p><p>Nothing you type here is stored or sent anywhere.</p>', input: 'pause' };
-    yield { say: '<p>What\'s going on for you right now? Pick one, or type in your own words.</p>', chips: MENU_CHIPS, input: 'text', end: true };
+    yield { say: t('welcome.1'), input: 'pause' };
+    yield { say: t('menu.prompt'), chips: menuChips(), input: 'text', end: true };
   }
 
   function* talk(seed) {
-    let what = seed;
-    if (!what) what = yield { say: '<p>I\'m listening. What\'s been going on?</p>', input: 'text' };
-    const feel = yield { say: '<p>Thank you for putting that into words. It takes something to do that.</p><p>If you had to name the main feeling underneath it, what would it be?</p>', chips: ['Anxious', 'Sad', 'Angry', 'Overwhelmed', 'Lonely', 'Ashamed', 'Numb'], input: 'text' };
-    const f = String(feel).toLowerCase();
-    const strength = yield { say: '<p>' + esc(feel) + '. That makes sense given what you described.</p>', input: 'scale', label: 'How strong is that feeling right now?' };
-    const suggestion = /anx|panic|overwhelm/.test(f) ? ['ground', 'Try a grounding exercise'] :
-                       /sad|lonely|numb|low/.test(f) ? ['low', 'Do one small thing'] :
-                       /sham|angry/.test(f) ? ['thought', 'Look at the thought behind it'] : ['breathe', 'Take four slow breaths'];
-    yield { say: '<p>' + (strength >= 70 ? 'That\'s a lot to be carrying. ' : '') + 'In CBT, feelings are linked to what we\'re thinking and what we\'re doing, and we can work on either side.</p><p>Would you like to try something?</p>',
-            chips: [{ label: suggestion[1], value: '__flow:' + suggestion[0] }, { label: 'Challenge a thought', value: '__flow:thought' }, { label: 'Just keep talking', value: 'keep' }, { label: 'See the menu', value: '__menu' }], input: 'text' };
-    // "keep talking" path
-    const more = yield { say: '<p>Okay. Tell me more about what\'s hardest about it.</p>', input: 'text' };
-    yield { say: '<p>It sounds like that part is weighing on you. Sometimes just saying it out loud loosens it a little.</p><p>If you want, a real person at Be Empowered Network will read a message from you. <a href="contact.html">Reach out here.</a></p>', input: 'pause' };
+    if (seed) yield { say: t('talk.1'), input: 'text' };
+    else yield { say: t('talk.1'), input: 'text' };
+    yield { say: t('talk.2'), input: 'text' };
+    yield {
+      say: t('talk.3'),
+      chips: [
+        { label: t('chip.thought'), value: '__flow:thought' },
+        { label: t('chip.ground'), value: '__flow:ground' },
+        { label: t('chip.breathe'), value: '__flow:breathe' },
+        { label: t('menu.back'), value: '__menu' }
+      ], input: 'text', end: true
+    };
   }
 
   function* anxious() {
-    const where = yield { say: '<p>Anxiety is your body\'s alarm going off. The alarm is real even when the danger isn\'t. Let\'s turn the volume down first, then look at what set it off.</p><p>Where do you feel it most right now?</p>', chips: ['Chest / breathing', 'Racing thoughts', 'Stomach', 'Restless / can\'t sit still', 'Everywhere'], input: 'text' };
-    const w = String(where).toLowerCase();
-    if (/chest|breath|everywhere/.test(w)) {
-      yield { say: '<p>Let\'s slow your breathing. Follow the circle: in for 4, hold 4, out 4, hold 4. Four rounds.</p>', input: 'breath', cycles: 4 };
-    } else if (/stomach|restless/.test(w)) {
-      yield { say: '<p>Let\'s bring you back into the room. Look around and name <strong>5 things you can see</strong>.</p>', input: 'text' };
-      yield { say: '<p>Good. Now <strong>4 things you can feel</strong>, like your feet on the floor, the chair, your clothes.</p>', input: 'text' };
-      yield { say: '<p>And <strong>3 things you can hear</strong>.</p>', input: 'text' };
-    } else {
-      yield { say: '<p>Let\'s get the thoughts out of your head and onto the screen, where they\'re easier to look at. What\'s the main thought racing round?</p>', input: 'text' };
-    }
-    const after = yield { say: '<p>Nice work. Now, the thinking part. Anxiety almost always contains a prediction: "something bad is going to happen." What is the bad thing your mind is predicting?</p>', input: 'text' };
-    const prob = yield { say: '<p>Okay: "<em>' + esc(after) + '</em>".</p>', input: 'scale', label: 'Honestly, how likely is that, 0 to 100?' };
-    const cope = yield { say: '<p>' + (prob <= 40 ? 'So your mind is treating a ' + prob + '% possibility like a certainty. That\'s what anxiety does: it confuses <em>possible</em> with <em>probable</em>.' : 'You rate it fairly likely, so let\'s plan for it rather than dread it.') + '</p><p>If it did happen, what is one thing you could do to cope or get through it?</p>', input: 'text' };
-    yield { say: '<p>"' + esc(cope) + '." That\'s your coping statement. Anxiety says <em>you couldn\'t handle it</em>. You just wrote down how you would.</p><p>Try saying it to yourself the next time the alarm goes off.</p>', input: 'pause' };
+    const before = yield { say: t('anxious.1'), input: 'scale', label: t('scale.anxiety') };
+    yield { say: t('anxious.2'), input: 'pause' };
+    yield { input: 'breath', cycles: 4 };
+    yield { say: t('anxious.3'), input: 'text' };
+    yield {
+      say: t('anxious.4'),
+      chips: [
+        { label: t('chip.thought'), value: '__flow:thought' },
+        { label: t('chip.ground'), value: '__flow:ground' },
+        { label: t('menu.back'), value: '__menu' }
+      ], input: 'text', end: true
+    };
   }
 
+  /* Behavioural activation */
   function* low() {
-    yield { say: '<p>When mood is low, the natural pull is to do less: stay in bed, cancel plans, scroll. But doing less usually feeds the low mood. CBT calls the way out <strong>behavioural activation</strong>: one small action first, motivation follows later.</p>', input: 'pause' };
-    const cat = yield { say: '<p>Which of these feels even slightly possible in the next hour?</p>', chips: ['Move my body', 'Contact someone', 'Take care of myself', 'Tidy one thing', 'Step outside', 'Do something I used to enjoy'], input: 'text' };
-    const c = String(cat).toLowerCase();
-    const ideas = /move/.test(c) ? 'Stand up and stretch for one minute. Walk to the end of the street and back. Ten slow squats.' :
-                  /contact/.test(c) ? 'Send one message that just says "thinking of you". Call someone for five minutes. Reply to one message you\'ve been avoiding.' :
-                  /care/.test(c) ? 'Drink a full glass of water. Have a shower. Eat something with protein in it. Open the curtains.' :
-                  /tidy/.test(c) ? 'Make the bed. Clear one surface. Take the cups to the kitchen.' :
-                  /outside/.test(c) ? 'Stand in the doorway for two minutes. Sit outside with a drink. Walk one block.' :
-                  'Play one song you love. Read one page. Sketch, cook, pray, kick a ball, whatever it used to be, for ten minutes only.';
-    const action = yield { say: '<p>Some ideas: ' + ideas + '</p><p>Pick one, and make it <strong>smaller</strong> than feels necessary. What exactly will you do?</p>', input: 'text' };
-    const when = yield { say: '<p>"' + esc(action) + '." Good. When?</p>', chips: ['Right now', 'In the next hour', 'Later today'], input: 'text' };
-    const before = yield { say: '<p>One more thing.</p>', input: 'scale', label: 'Before you do it, how is your mood right now?' };
-    yield { say: '<p>Noted: ' + before + '. After you\'ve done "' + esc(action) + '", rate it again. Most people find the number moves, even a little, and that\'s the whole point: <em>action changes mood, not the other way round</em>.</p><p>If low mood has been with you most days for more than two weeks, please also talk to a person. <a href="get-help.html">Here\'s how.</a></p>', input: 'pause' };
+    yield { say: t('low.1'), input: 'text' };
+    yield { say: t('low.2'), input: 'text' };
+    yield {
+      say: t('low.3'),
+      chips: [{ label: t('chip.today'), value: 'today' }, { label: t('chip.tomorrow'), value: 'tomorrow' }],
+      input: 'text'
+    };
+    yield { say: t('low.4'), input: 'pause' };
   }
 
-  function* thought() {
-    const sit = yield { say: '<p>This is a <strong>thought record</strong>: catch it, check it, change it.</p><p>First, what was the situation? Where were you, what happened?</p>', input: 'text' };
-    const th = yield { say: '<p>And what went through your mind? The exact words, if you can. ("I\'m going to fail." "They think I\'m useless.")</p>', input: 'text' };
-    const belief = yield { say: '<p>"<em>' + esc(th) + '</em>". Let\'s check it.</p>', input: 'scale', label: 'How much do you believe it right now?' };
-    const trap = yield { say: '<p>Does it fall into one of these common thinking traps?</p><ul><li><strong>All-or-nothing</strong>: one mistake means total failure</li><li><strong>Mind-reading</strong>: assuming you know what others think</li><li><strong>Fortune-telling</strong>: predicting the worst as fact</li><li><strong>Catastrophising</strong>: small problem, disaster ending</li><li><strong>Should statements</strong>: harsh rules about how you must be</li><li><strong>Labelling</strong>: "I\'m useless" instead of "I made a mistake"</li><li><strong>Discounting the positive</strong>: what went well doesn\'t count</li></ul>', chips: ['All-or-nothing', 'Mind-reading', 'Fortune-telling', 'Catastrophising', 'Should statements', 'Labelling', 'Discounting the positive', 'Not sure'], input: 'text' };
-    const forE = yield { say: '<p>' + (/not sure/i.test(trap) ? 'That\'s fine; naming it isn\'t essential.' : esc(trap) + '. Very common, and very convincing from the inside.') + '</p><p>Now the evidence. What facts, not feelings, support the thought?</p>', input: 'text' };
-    const against = yield { say: '<p>And what facts go <em>against</em> it? Think about what you\'d say to a friend who told you this about themselves.</p>', input: 'text' };
-    const balanced = yield { say: '<p>Looking at both sides, write a more balanced thought. Not fake-positive, just fairer. For example: "I made a mistake in the meeting, and I\'ve also done good work there for two years."</p>', input: 'text' };
-    const after = yield { say: '<p>"<em>' + esc(balanced) + '</em>". That\'s a thought you can stand on.</p>', input: 'scale', label: 'How much do you believe the original thought now?' };
-    const diff = belief - after;
-    yield { say: '<p>' + (diff > 0 ? 'From ' + belief + ' down to ' + after + '. The thought loosened by looking at it honestly. That\'s the skill, and it gets faster with practice.' : 'The number didn\'t move much, and that\'s okay. Some thoughts have deep roots. Writing them down is still the first step, and it\'s worth bringing this one to a circle or a professional.') + '</p>', input: 'pause' };
-  }
-
+  /* Worry tree: actionable or hypothetical */
   function* worry() {
-    const w = yield { say: '<p>Overthinking is usually worry wearing a disguise. Let\'s use the <strong>worry tree</strong>.</p><p>What\'s the worry, in one sentence?</p>', input: 'text' };
-    const can = yield { say: '<p>"<em>' + esc(w) + '</em>". Now the key question: is there <strong>anything you can actually do</strong> about this, right now or soon?</p>', chips: ['Yes, something', 'No, it\'s out of my hands', 'It might not even happen'], input: 'text' };
-    if (/yes/i.test(can)) {
-      const stepTxt = yield { say: '<p>Then this is a <em>practical</em> worry, and the answer is a plan, not more thinking. What is the very next small step?</p>', input: 'text' };
-      const when = yield { say: '<p>"' + esc(stepTxt) + '." When will you do it?</p>', chips: ['Now', 'Today', 'Tomorrow', 'This week'], input: 'text' };
-      yield { say: '<p>Done: "' + esc(stepTxt) + '", ' + esc(String(when).toLowerCase()) + '. Every time the worry comes back before then, remind yourself: <em>I have a plan and a time. I don\'t need to solve it again right now.</em></p>', input: 'pause' };
+    yield { say: t('worry.1'), input: 'text' };
+    const can = yield {
+      say: t('worry.2'),
+      chips: [{ label: t('chip.yes'), value: 'yes' }, { label: t('chip.no'), value: 'no' }, { label: t('chip.notsure'), value: 'no' }],
+      input: 'text'
+    };
+    if (/^y|yes/i.test(String(can))) {
+      yield { say: t('worry.3a'), input: 'text' };
+      yield { say: t('worry.4'), input: 'pause' };
     } else {
-      yield { say: '<p>Then this is a <em>hypothetical</em> worry: a "what if" your mind can\'t solve because there\'s nothing to do yet. Rumination feels productive, but it\'s just the same loop.</p><p>Two things that help:</p><ol><li><strong>Name it and park it.</strong> Say to yourself: "This is a what-if. I\'ll come back to it at my worry time." Then turn your attention to what you were doing, and keep turning it back.</li><li><strong>Worry time.</strong> Give worry 15 minutes at a fixed time each day (not bedtime). Outside that window, it waits. Most parked worries feel smaller by the time you get to them.</li></ol>', input: 'pause' };
-      const next = yield { say: '<p>What were you doing before the worry took over? Let\'s point you back at it.</p>', input: 'text' };
-      yield { say: '<p>Go back to "' + esc(next) + '". When the worry knocks, it can wait. You\'ve already decided that.</p>', input: 'pause' };
+      yield { say: t('worry.3b'), input: 'pause' };
     }
+  }
+
+  /* Thought record */
+  function* thought() {
+    yield { say: t('thought.1'), input: 'text' };
+    const before = yield { say: t('thought.2'), input: 'scale', label: t('scale.belief') };
+    yield { say: t('thought.3'), input: 'text' };
+    yield { say: t('thought.4'), input: 'text' };
+    yield { say: t('thought.5'), input: 'text' };
+    const after = yield { say: t('thought.6'), input: 'scale', label: t('scale.belief') };
+    const moved = Number(before) - Number(after);
+    yield { say: moved >= 10 ? t('thought.7a') : t('thought.7b'), input: 'pause' };
+  }
+
+  /* Naming cognitive distortions */
+  function* traps() {
+    yield { say: t('traps.1'), input: 'text' };
+    yield {
+      say: t('traps.2'),
+      chips: [
+        { label: t('trap.all'), value: 'all' },
+        { label: t('trap.mind'), value: 'mind' },
+        { label: t('trap.future'), value: 'future' },
+        { label: t('trap.blame'), value: 'blame' },
+        { label: t('trap.should'), value: 'should' },
+        { label: t('trap.filter'), value: 'filter' }
+      ], input: 'text'
+    };
+    yield { say: t('traps.3'), input: 'text' };
+    yield { say: t('traps.4'), input: 'pause' };
   }
 
   function* breathe() {
-    yield { say: '<p>Box breathing: in for 4, hold 4, out 4, hold 4. Breathe with the circle. Four rounds.</p>', input: 'breath', cycles: 4 };
-    const how = yield { say: '<p>How do you feel now, compared with before?</p>', chips: ['Calmer', 'A little better', 'The same', 'Worse'], input: 'text' };
-    yield { say: '<p>' + (/calm|better/i.test(how) ? 'Good. Slow exhales tell your nervous system the emergency is over. You can do this anywhere, no one can tell.' : 'That\'s okay. Breathing is a first-aid tool, not a cure, and sometimes it takes a few rounds. Grounding might suit you better; you can try that from the menu.') + '</p>', input: 'pause' };
+    yield { say: t('breathe.1'), input: 'pause' };
+    yield { input: 'breath', cycles: 5 };
+    yield { say: t('breathe.2'), input: 'text' };
   }
 
   function* ground() {
-    yield { say: '<p>This is the <strong>5-4-3-2-1</strong> grounding exercise. It pulls attention out of your head and into the room. Take your time with each one.</p><p>Name <strong>5 things you can see</strong>.</p>', input: 'text' };
-    yield { say: '<p><strong>4 things you can feel</strong>: your feet on the floor, fabric on your skin, the temperature of the air.</p>', input: 'text' };
-    yield { say: '<p><strong>3 things you can hear</strong>, near or far.</p>', input: 'text' };
-    yield { say: '<p><strong>2 things you can smell</strong> (or two smells you like).</p>', input: 'text' };
-    yield { say: '<p><strong>1 thing you can taste</strong>, or one thing you\'re grateful for.</p>', input: 'text' };
-    yield { say: '<p>You\'re here, in this room, in this moment. Whatever was pulling you away is still just thoughts, and you can come back to now any time using this.</p>', input: 'pause' };
+    yield { say: t('ground.1'), input: 'text' };
+    yield { say: t('ground.2'), input: 'text' };
+    yield { say: t('ground.3'), input: 'text' };
+    yield { say: t('ground.4'), input: 'text' };
+    yield { say: t('ground.5'), input: 'pause' };
   }
 
   function* sleep() {
-    const issue = yield { say: '<p>Poor sleep and low mood feed each other, so this is worth fixing. What\'s the main problem?</p>', chips: ['Can\'t fall asleep', 'Wake in the night', 'Wake too early', 'Mind won\'t switch off'], input: 'text' };
-    const i = String(issue).toLowerCase();
-    let tips = /won'?t switch|fall asleep/.test(i) ?
-      '<ul><li><strong>Get the thoughts out.</strong> Ten minutes before bed, write tomorrow\'s to-do list and any worries on paper. Your brain can stop holding them.</li><li><strong>The 20-minute rule.</strong> If you\'re awake more than about 20 minutes, get up, sit somewhere dim, do something dull, return when sleepy. Bed must mean sleep, not lying awake.</li><li><strong>No screens in bed.</strong> The phone goes on the other side of the room.</li></ul>' :
-      /wake in the night/.test(i) ?
-      '<ul><li><strong>Don\'t check the time.</strong> It only starts the maths ("only 3 hours left…").</li><li><strong>Get up if you\'re wide awake.</strong> Sit somewhere dim, return when sleepy.</li><li><strong>Watch the evening.</strong> Alcohol and heavy food late are the most common causes of 3am waking.</li></ul>' :
-      '<ul><li><strong>Keep the same wake time</strong> seven days a week, even after a bad night. This is the single most powerful lever.</li><li><strong>Morning light.</strong> Get outside within an hour of waking; it anchors your body clock.</li><li><strong>Early waking with low mood</strong> for more than two weeks is worth mentioning to a professional. <a href="get-help.html">Here\'s how.</a></li></ul>';
-    yield { say: '<p>' + tips + '</p><p>Pick <strong>one</strong> of these to try for a week. Changing everything at once rarely sticks.</p>', input: 'pause' };
-    yield { say: '<p>And if racing thoughts are the real problem, the worry tree from the menu is built for that.</p>', input: 'pause' };
+    const kind = yield {
+      say: t('sleep.1'),
+      chips: [{ label: t('chip.worry'), value: 'worry' }, { label: t('chip.restless'), value: 'restless' }],
+      input: 'text'
+    };
+    yield { say: /worry/i.test(String(kind)) ? t('sleep.2a') : t('sleep.2b'), input: 'pause' };
+    yield { say: t('sleep.3'), input: 'pause' };
   }
 
-  const FLOWS = { talk: talk, anxious: anxious, low: low, thought: thought, worry: worry, breathe: breathe, ground: ground, sleep: sleep };
+  const FLOWS = {
+    welcome: welcome, talk: talk, anxious: anxious, low: low, worry: worry,
+    thought: thought, traps: traps, breathe: breathe, ground: ground, sleep: sleep
+  };
+
+  setLang(lang);
 })();
