@@ -286,6 +286,7 @@
       { label: t('menu.ground'), value: '__flow:ground' },
       { label: t('menu.sleep'), value: '__flow:sleep' },
       { label: t('menu.talk'), value: '__flow:talk' },
+      { label: t('menu.pro'), value: '__flow:pro' },
       { label: t('ui.langSwitch'), value: lang === 'en' ? '__lang:pcm' : '__lang:en' }
     ];
   }
@@ -376,6 +377,7 @@
     if (/ground|overwhelm|dissociat|spacey|unreal|i dey lost/.test(s)) return pick('ground');
     if (/trap|distort|always|never|everyone|nobody/.test(s)) return pick('traps');
     if (/thought|believe|i'?m (a )?(failure|useless|worthless|stupid)|i be (mumu|useless|failure)/.test(s)) return pick('thought');
+    if (/therapist|psycholog|psychiatr|counsell|counselor|professional|see (a |someone)|doctor|clinic|hospital|i sabi say i need help/.test(s)) return pick('pro');
     if (/help ?line|number|call|emergency|abeg help/.test(s)) return helplines();
     if (/^(hi|hello|hey|good (morning|afternoon|evening)|how far|how you dey|abeg)\b/.test(s)) { bot('<p>' + (lang === 'pcm' ? 'How far. I glad say you come.' : 'Hello. I’m glad you’re here.') + '</p>'); return menu(); }
     if (/thank/.test(s)) { bot('<p>' + (lang === 'pcm' ? 'No wahala. Come back any time.' : 'You’re welcome. Come back any time.') + '</p>'); return menu(true); }
@@ -432,6 +434,7 @@
       input: 'text'
     };
     yield { say: t('low.4'), input: 'pause' };
+    yield { say: t('signpost.en'), input: 'pause' };
   }
 
   /* Worry tree: actionable or hypothetical */
@@ -460,6 +463,9 @@
     const after = yield { say: t('thought.6'), input: 'scale', label: t('scale.belief') };
     const moved = Number(before) - Number(after);
     yield { say: moved >= 10 ? t('thought.7a') : t('thought.7b'), input: 'pause' };
+    // A thought that didn't shift is exactly when a person should be told
+    // plainly that this tool has a limit.
+    if (moved < 10) yield { say: t('signpost.en'), input: 'pause' };
   }
 
   /* Naming cognitive distortions */
@@ -504,9 +510,21 @@
     yield { say: t('sleep.3'), input: 'pause' };
   }
 
+  /* Signposting to real care. Bee is a first step, not the destination,
+     and saying so plainly is part of the job -- not an admission of
+     failure. Asks for the state first so the directory advice is
+     specific rather than a generic "see someone". */
+  function* pro() {
+    yield { say: t('pro.1'), input: 'text' };
+    yield { say: t('pro.2'), input: 'pause' };
+    yield { say: t('pro.3'), input: 'pause' };
+    yield { say: t('pro.4'), input: 'pause' };
+  }
+
   const FLOWS = {
     welcome: welcome, talk: talk, anxious: anxious, low: low, worry: worry,
-    thought: thought, traps: traps, breathe: breathe, ground: ground, sleep: sleep
+    thought: thought, traps: traps, breathe: breathe, ground: ground, sleep: sleep,
+    pro: pro
   };
 
   setLang(lang);
