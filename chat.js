@@ -258,7 +258,15 @@
       }
     }
 
-    if (gen) { step(value); } else { route(value); }
+    if (gen) { step(value); return; }
+
+    if (llmOk) {
+      askClaude(value).then(function (handled) {
+        if (!handled) { llmOk = false; route(value); }
+      });
+      return;
+    }
+    route(value);
   }
 
   form.addEventListener('submit', function (e) {
@@ -289,6 +297,72 @@
     bot(t('helplines.say'), 'msg--crisis');
     setChips([{ label: t('menu.back'), value: '__menu' }]); setInput('text');
   }
+
+  /* ---------- Claude ----------
+     Free text goes to the model; chips keep running the scripted flows,
+     which are cheaper, deterministic and good. If the call fails for any
+     reason -- no key, no network, an upstream error -- we silently fall
+     back to the scripted router, so Bee never shows an error page to
+     someone who is already having a bad day. */
+  const historyLog = [];
+  let llmOk = true;
+
+  function remember(role, content) {
+    historyLog.push({ role: role, content: content });
+    if (historyLog.length > 12) historyLog.splice(0, historyLog.length - 12);
+  }
+
+  /* Markdown is limited on purpose: bold, links, line breaks. Nothing that
+     could inject markup into the panel. */
+  function render(text) {
+    const safe = esc(text);
+    return '<p>' + safe
+      .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+      .replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank" rel="noopener">$1</a>')
+      .replace(/\n\s*[-*]\s+/g, '<br>&bull; ')
+      .replace(/\n{2,}/g, '</p><p>')
+      .replace(/\n/g, '<br>') + '</p>';
+  }
+
+  async function askClaude(text) {
+    const cfg = window.SUPABASE_CONFIG;
+    if (!cfg || !cfg.url || !cfg.anonKey) return false;
+
+    const t = document.createElement('div');
+    t.className = 'typing'; t.setAttribute('aria-hidden', 'true');
+    t.innerHTML = '<i></i><i></i><i></i>';
+    log.appendChild(t); scroll();
+    setInput('none'); setChips([]);
+
+    let data = null;
+    try {
+      const res = await fetch(cfg.url + '/functions/v1/bee-chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          apikey: cfg.anonKey,
+          Authorization: 'Bearer ' + cfg.anonKey
+        },
+        body: JSON.stringify({ message: text, history: historyLog, lang: lang })
+      });
+      data = await res.json();
+    } catch (e) { data = null; }
+
+    t.remove();
+
+    if (!data || !data.reply) { setInput('text'); return false; }
+
+    bot(render(data.reply), data.crisis ? 'msg--crisis' : '');
+    remember('user', text);
+    remember('assistant', data.reply);
+
+    setChips(data.crisis
+      ? [{ label: t2('crisis.helplines'), value: '__helplines' }, { label: t2('menu.back'), value: '__menu' }]
+      : [{ label: t2('menu.back'), value: '__menu' }]);
+    setInput('text');
+    return true;
+  }
+  function t2(k) { return t(k); }
 
   /* ---------- Free-text routing ---------- */
   function route(text) {

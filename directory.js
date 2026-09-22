@@ -62,7 +62,7 @@ window.DIRECTORY = [
   const typeSel = document.getElementById('dir-type');
   const stateSel = document.getElementById('dir-state');
   const count = document.getElementById('dir-count');
-  const TYPE = { hospital: 'Hospital', clinic: 'Clinic', ngo: 'NGO / peer support', helpline: 'Helpline', online: 'Online' };
+  const TYPE = { hospital: 'Hospital', clinic: 'Clinic', ngo: 'NGO / peer support', helpline: 'Helpline', online: 'Online', professional: 'Professional body / register' };
 
   // populate state filter from data
   const states = Array.from(new Set(window.DIRECTORY.flatMap(function (d) { return d.states; }))).sort(function (a, b) {

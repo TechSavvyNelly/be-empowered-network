@@ -16,7 +16,7 @@ Static site on Railway; everything dynamic runs on Supabase
 | Events + RSVPs | `events.js`, `data-sync.js` | `events`, `rsvps` |
 | Directory | `directory.js`, `data-sync.js` | `directory_entries` |
 | Admin | `admin.html`, `admin.js` | RLS + `profiles.is_admin` |
-| "Bee" chat | `chat.js` | none — runs entirely in the browser |
+| "Bee" chat | `chat.js`, `chat-copy.js` | `bee-chat` → Claude Opus 5 |
 
 ## Deploy
 
@@ -49,6 +49,36 @@ where email = 'your@email.address';
 is deliberately a deliberate act in the dashboard.
 
 **5. Site** — `git push`; Railway builds from the repo automatically.
+
+## Bee (the chat companion)
+
+Bee speaks English and Nigerian Pidgin, and is backed by Claude Opus 5
+through the `bee-chat` Edge Function.
+
+**The crisis check is a boundary, not a feature.** It runs twice: in the
+browser (instant, no round trip) and again inside the function, because a
+client-side check is advisory only. Either way crisis text **never
+reaches the model** — the highest-stakes moment is answered by text we
+wrote, not text that was generated. Replayed history is screened too.
+
+If `ANTHROPIC_API_KEY` is unset, or the API errors, or the network drops,
+the function returns `fallback: true` and the browser quietly reverts to
+the scripted CBT flows. Bee never shows an error to someone already
+having a bad day.
+
+```sh
+supabase secrets set ANTHROPIC_API_KEY='sk-ant-...' --project-ref wsytzmqxktvzxpwcfjyw
+```
+
+Cost: roughly 1.8p–2p per turn at `effort: low` with the system prompt
+cached, so about 20p for a full conversation. `response.usage` is returned
+to the client for monitoring.
+
+Two test files guard this:
+```sh
+node test/chat-safety.test.js       # 43 assertions, both languages
+node test/bee-chat-safety.test.js   # 42 — server and browser copies must agree
+```
 
 ## Security model
 
