@@ -799,3 +799,37 @@ fieldset.field legend { font-size: var(--text-sm); font-weight: 600; margin-bott
 .trustee-photo { flex: none; width: 80px; height: 80px; border-radius: 50%; object-fit: cover; object-position: 50% 35%; box-shadow: var(--shadow-md); filter: contrast(1.05) saturate(0.95); }
 .trustee-photo + .initials { display: none; }
 .trustee span + span { display: block; margin-top: 2px; }
+
+/* ---------------------------------------------------------------
+   Sign in / sign up page
+   --------------------------------------------------------------- */
+.oauth { display: grid; gap: var(--space-3); margin-bottom: var(--space-5); }
+.btn--oauth {
+  display: flex; align-items: center; justify-content: center; gap: var(--space-3);
+  width: 100%; padding: var(--space-3) var(--space-4);
+  background: var(--color-surface); color: var(--color-text);
+  border: 1px solid var(--color-border); border-radius: var(--radius-md);
+  font-size: var(--text-sm); font-weight: 600;
+}
+.btn--oauth:hover { background: var(--color-surface-2); }
+.btn--oauth svg { width: 18px; height: 18px; flex: none; }
+.btn--apple svg { color: var(--color-text); }
+.oauth-note { font-size: var(--text-xs); color: var(--color-text-muted); }
+
+.or-rule {
+  display: flex; align-items: center; gap: var(--space-4);
+  margin-bottom: var(--space-5);
+  font-size: var(--text-xs); color: var(--color-text-muted);
+}
+.or-rule::before, .or-rule::after {
+  content: ""; flex: 1; height: 1px; background: var(--color-border);
+}
+
+/* "Did you mean gmail.com?" after a likely typo */
+.suggest { font-size: var(--text-xs); color: var(--color-text-muted); margin-top: var(--space-1); }
+.suggest button {
+  color: var(--color-primary); font-weight: 700;
+  text-decoration: underline; text-underline-offset: 0.18em;
+}
+
+.form-status[hidden] { display: none; }

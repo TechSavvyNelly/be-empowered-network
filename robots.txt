@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://beempowerednetwork.org/sitemap.xml

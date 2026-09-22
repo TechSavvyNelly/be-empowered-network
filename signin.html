@@ -3,20 +3,14 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Newsletter & account — Be Empowered Network</title>
-  <meta name="description" content="Create a free account to RSVP to events, join the newsletter and manage what Be Empowered Network emails you.">
-  <meta property="og:title" content="Newsletter & account — Be Empowered Network">
-  <meta property="og:description" content="Create a free account to RSVP to events, join the newsletter and manage what Be Empowered Network emails you.">
+  <title>Sign in or create an account — Be Empowered Network</title>
+  <meta name="description" content="Sign in to Be Empowered Network, or create a free account to RSVP to circles and events and choose what we email you.">
+  <meta name="robots" content="noindex, follow">
+  <meta property="og:title" content="Sign in — Be Empowered Network">
+  <meta property="og:description" content="Sign in to Be Empowered Network, or create a free account to RSVP to circles and events.">
   <meta property="og:image" content="https://beempowerednetwork.org/assets/logo.png">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://beempowerednetwork.org/account.html">
   <meta property="og:site_name" content="Be Empowered Network">
-  <meta property="og:locale" content="en_NG">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Newsletter & account — Be Empowered Network">
-  <meta name="twitter:description" content="Create a free account to RSVP to events, join the newsletter and manage what Be Empowered Network emails you.">
-  <meta name="twitter:image" content="https://beempowerednetwork.org/assets/logo.png">
-  <link rel="canonical" href="https://beempowerednetwork.org/account.html">
   <link rel="icon" type="image/png" href="assets/mark.png">
   <link rel="apple-touch-icon" href="assets/mark.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -76,90 +70,111 @@
 
   <main id="main">
 
-    <section class="page-head" aria-labelledby="page-title" id="auth-view">
+    <section class="page-head" aria-labelledby="page-title" id="auth-root">
       <div class="container container--wide">
         <div class="grid-2" style="align-items: start;">
           <div>
-            <p class="eyebrow">Newsletter &amp; account</p>
-            <h1 id="page-title">Stay close to the network.</h1>
-            <p class="lede">A free account lets you RSVP to circles and events, choose what we email you, and keep your details in one place.</p>
-            <p id="auth-reason" class="form-status" data-state="ok" hidden style="margin-top: var(--space-6); max-width: 46ch;"></p>
+            <p class="eyebrow">Your account</p>
+            <h1 id="page-title">Sign in, or join the network.</h1>
+            <p class="lede">A free account lets you RSVP to circles and events, choose exactly what we email you, and keep your details in one place.</p>
             <ul class="prose" style="list-style: none; padding: 0; margin-top: var(--space-8); color: var(--color-text-muted);" role="list">
-              <li><strong style="color: var(--color-text);">Monthly newsletter</strong>: what we've been doing, one practical mental-health idea, upcoming dates.</li>
-              <li><strong style="color: var(--color-text);">Event updates</strong>: new circles, trainings and campaign days, with joining links for anything you've RSVP'd to.</li>
-              <li><strong style="color: var(--color-text);">Volunteer opportunities</strong>: only if you opt in.</li>
+              <li><strong style="color: var(--color-text);">RSVP in one tap</strong>: we hold your place and send the joining details.</li>
+              <li><strong style="color: var(--color-text);">You choose the emails</strong>: newsletter, events, volunteering — each one optional.</li>
+              <li><strong style="color: var(--color-text);">Your details stay yours</strong>: we never share or sell them, and you can delete your account at any time.</li>
             </ul>
-            <p class="form-note" style="margin-top: var(--space-6);">We never share your details. Unsubscribe from any email in one click.</p>
+            <p class="form-note" style="margin-top: var(--space-6);">If you are in immediate danger, please call <a href="tel:112">112</a> rather than waiting for a reply.</p>
           </div>
+
           <div class="auth-card">
+            <div class="form-status" id="already-in" data-state="ok" hidden>
+              <p>You&rsquo;re signed in as <strong data-who></strong>. Your details are saved.</p>
+              <p style="margin-top: var(--space-3);"><a href="events.html">Browse upcoming events &rarr;</a> &nbsp;·&nbsp; <button class="btn btn--link" type="button" id="signout-btn">Sign out</button></p>
+            </div>
+
             <div class="tabs" role="tablist" aria-label="Sign in or create account">
               <button role="tab" type="button" id="tab-signin" aria-controls="panel-signin" aria-selected="true">Sign in</button>
               <button role="tab" type="button" id="tab-signup" aria-controls="panel-signup" aria-selected="false" tabindex="-1">Create account</button>
             </div>
 
+            <!-- ---------- Sign in ---------- -->
             <div role="tabpanel" id="panel-signin" aria-labelledby="tab-signin">
               <h2>Welcome back</h2>
               <p>Sign in to see your RSVPs and email preferences.</p>
+
+              <div class="oauth" data-oauth-group>
+                <button class="btn btn--oauth" type="button" data-oauth="google"><svg viewBox="0 0 18 18" aria-hidden="true" focusable="false"><path fill="#4285F4" d="M17.64 9.2c0-.64-.06-1.25-.16-1.84H9v3.48h4.84a4.14 4.14 0 0 1-1.8 2.72v2.26h2.92c1.7-1.57 2.68-3.88 2.68-6.62z"/><path fill="#34A853" d="M9 18c2.43 0 4.47-.8 5.96-2.18l-2.92-2.26c-.8.54-1.84.86-3.04.86-2.34 0-4.32-1.58-5.02-3.7H.96v2.34A9 9 0 0 0 9 18z"/><path fill="#FBBC05" d="M3.98 10.72a5.4 5.4 0 0 1 0-3.44V4.94H.96a9 9 0 0 0 0 8.12l3.02-2.34z"/><path fill="#EA4335" d="M9 3.58c1.32 0 2.5.46 3.44 1.35l2.58-2.58C13.46.9 11.43 0 9 0A9 9 0 0 0 .96 4.94l3.02 2.34C4.68 5.16 6.66 3.58 9 3.58z"/></svg><span>Continue with Google</span></button>
+                <button class="btn btn--oauth btn--apple" type="button" data-oauth="apple"><svg viewBox="0 0 18 18" aria-hidden="true" focusable="false" fill="currentColor"><path d="M12.2 9.54c.02 2.3 2.02 3.07 2.04 3.08-.02.05-.32 1.1-1.05 2.17-.63.93-1.29 1.85-2.33 1.87-1.02.02-1.35-.6-2.52-.6-1.17 0-1.53.58-2.5.62-1 .04-1.76-1-2.4-1.92-1.3-1.9-2.3-5.35-.96-7.69.66-1.16 1.85-1.9 3.14-1.92.99-.02 1.92.66 2.52.66.6 0 1.73-.82 2.92-.7.5.02 1.9.2 2.79 1.51-.07.05-1.67.98-1.65 2.92zM10.6 3.3c.53-.64.89-1.53.79-2.42-.76.03-1.69.51-2.24 1.15-.49.56-.92 1.47-.8 2.34.85.06 1.71-.43 2.25-1.07z"/></svg><span>Continue with Apple</span></button>
+                <p class="oauth-note" data-oauth-empty hidden>Google and Apple sign-in aren&rsquo;t switched on yet. Use your email below.</p>
+              </div>
+              <p class="or-rule" data-oauth-rule><span>or with your email</span></p>
+
               <form class="form" id="signin-form" novalidate>
-                <div class="field"><label for="si-email">Email</label><input id="si-email" name="email" type="email" autocomplete="email" required></div>
-                <div class="field"><label for="si-pw">Password</label><input id="si-pw" name="password" type="password" autocomplete="current-password" required></div>
+                <div class="field">
+                  <label for="si-email">Email</label>
+                  <input id="si-email" name="email" type="email" autocomplete="email" inputmode="email" required>
+                  <span class="field-error"></span>
+                </div>
+                <div class="field">
+                  <label for="si-pw">Password</label>
+                  <input id="si-pw" name="password" type="password" autocomplete="current-password" required>
+                  <span class="field-error"></span>
+                </div>
                 <button class="btn btn--primary" type="submit">Sign in</button>
-                <p class="form-status" role="alert"></p>
+                <p class="form-status" role="alert" hidden></p>
               </form>
+              <p class="switch-tab"><a href="#" id="forgot-link">Forgotten your password?</a></p>
               <p class="switch-tab">New here? <button type="button" data-switch-tab="panel-signup">Create a free account</button></p>
             </div>
 
+            <!-- ---------- Sign up ---------- -->
             <div role="tabpanel" id="panel-signup" aria-labelledby="tab-signup" hidden>
               <h2>Create your account</h2>
-              <p>Takes about a minute. Choose what you'd like to hear about.</p>
+              <p>Takes about a minute. We&rsquo;ll email you a link to confirm it&rsquo;s really you.</p>
+
+              <div class="oauth" data-oauth-group>
+                <button class="btn btn--oauth" type="button" data-oauth="google"><svg viewBox="0 0 18 18" aria-hidden="true" focusable="false"><path fill="#4285F4" d="M17.64 9.2c0-.64-.06-1.25-.16-1.84H9v3.48h4.84a4.14 4.14 0 0 1-1.8 2.72v2.26h2.92c1.7-1.57 2.68-3.88 2.68-6.62z"/><path fill="#34A853" d="M9 18c2.43 0 4.47-.8 5.96-2.18l-2.92-2.26c-.8.54-1.84.86-3.04.86-2.34 0-4.32-1.58-5.02-3.7H.96v2.34A9 9 0 0 0 9 18z"/><path fill="#FBBC05" d="M3.98 10.72a5.4 5.4 0 0 1 0-3.44V4.94H.96a9 9 0 0 0 0 8.12l3.02-2.34z"/><path fill="#EA4335" d="M9 3.58c1.32 0 2.5.46 3.44 1.35l2.58-2.58C13.46.9 11.43 0 9 0A9 9 0 0 0 .96 4.94l3.02 2.34C4.68 5.16 6.66 3.58 9 3.58z"/></svg><span>Sign up with Google</span></button>
+                <button class="btn btn--oauth btn--apple" type="button" data-oauth="apple"><svg viewBox="0 0 18 18" aria-hidden="true" focusable="false" fill="currentColor"><path d="M12.2 9.54c.02 2.3 2.02 3.07 2.04 3.08-.02.05-.32 1.1-1.05 2.17-.63.93-1.29 1.85-2.33 1.87-1.02.02-1.35-.6-2.52-.6-1.17 0-1.53.58-2.5.62-1 .04-1.76-1-2.4-1.92-1.3-1.9-2.3-5.35-.96-7.69.66-1.16 1.85-1.9 3.14-1.92.99-.02 1.92.66 2.52.66.6 0 1.73-.82 2.92-.7.5.02 1.9.2 2.79 1.51-.07.05-1.67.98-1.65 2.92zM10.6 3.3c.53-.64.89-1.53.79-2.42-.76.03-1.69.51-2.24 1.15-.49.56-.92 1.47-.8 2.34.85.06 1.71-.43 2.25-1.07z"/></svg><span>Sign up with Apple</span></button>
+                <p class="oauth-note" data-oauth-empty hidden>Google and Apple sign-up aren&rsquo;t switched on yet. Use the form below.</p>
+              </div>
+              <p class="or-rule" data-oauth-rule><span>or with your email</span></p>
+
               <form class="form" id="signup-form" novalidate>
-                <div class="field"><label for="su-name">Full name</label><input id="su-name" name="name" type="text" autocomplete="name" required><span class="field-error"></span></div>
-                <div class="field"><label for="su-email">Email</label><input id="su-email" name="email" type="email" autocomplete="email" required><span class="field-error"></span></div>
-                <div class="field"><label for="su-pw">Password</label><input id="su-pw" name="password" type="password" autocomplete="new-password" minlength="8" required><span class="hint">At least 8 characters.</span><span class="field-error"></span></div>
+                <div class="field">
+                  <label for="su-name">Full name</label>
+                  <input id="su-name" name="name" type="text" autocomplete="name" required>
+                  <span class="field-error"></span>
+                </div>
+                <div class="field">
+                  <label for="su-email">Email</label>
+                  <input id="su-email" name="email" type="email" autocomplete="email" inputmode="email" required>
+                  <span class="hint">We send a confirmation link here, so it needs to be one you can open.</span>
+                  <p class="suggest" id="su-email-suggest" hidden>Did you mean <button type="button"></button>?</p>
+                  <span class="field-error"></span>
+                </div>
+                <div class="field">
+                  <label for="su-phone">Phone number</label>
+                  <input id="su-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="0803 123 4567" required>
+                  <span class="hint">Nigerian mobile, or include the country code for anywhere else.</span>
+                  <span class="field-error"></span>
+                </div>
+                <div class="field">
+                  <label for="su-pw">Password</label>
+                  <input id="su-pw" name="password" type="password" autocomplete="new-password" minlength="8" required>
+                  <span class="hint">At least 8 characters, with a letter and a number.</span>
+                  <span class="field-error"></span>
+                </div>
                 <fieldset class="field">
                   <legend>Email me about</legend>
                   <label class="check"><input type="checkbox" name="newsletter" checked><span>Monthly newsletter</span></label>
                   <label class="check"><input type="checkbox" name="events" checked><span>Events and circles<small>Includes joining details for anything you RSVP to.</small></span></label>
                   <label class="check"><input type="checkbox" name="volunteering"><span>Volunteer opportunities</span></label>
                 </fieldset>
-                <label class="check"><input type="checkbox" name="consent" required><span>I agree that Be Empowered Network may store my details to run my account and send the emails I've chosen.</span></label>
+                <label class="check"><input type="checkbox" name="consent" required><span>I agree that Be Empowered Network may store my details to run my account and send the emails I&rsquo;ve chosen.</span></label>
                 <button class="btn btn--primary" type="submit">Create account</button>
-                <p class="form-status" role="alert"></p>
+                <p class="form-status" role="alert" hidden></p>
               </form>
               <p class="switch-tab">Already have an account? <button type="button" data-switch-tab="panel-signin">Sign in</button></p>
             </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="page-head" id="dash-view" hidden aria-labelledby="dash-title">
-      <div class="container container--wide">
-        <div class="dash-head">
-          <div>
-            <p class="eyebrow">Your account</p>
-            <h1 id="dash-title">Hello, <span id="dash-name"></span>.</h1>
-            <p id="dash-email"></p>
-          </div>
-          <button class="btn btn--ghost" type="button" id="signout">Sign out</button>
-        </div>
-        <div class="dash">
-          <div class="dash-card">
-            <h2>Your events</h2>
-            <p>Everything you've RSVP'd to. Joining details are emailed before each event.</p>
-            <ul class="rsvp-list" id="rsvp-list" role="list"></ul>
-            <p style="margin-top: var(--space-5);"><a class="btn btn--primary" href="events.html">Browse events</a></p>
-          </div>
-          <div class="dash-card">
-            <h2>Email preferences</h2>
-            <p>Changes save automatically.</p>
-            <form class="form" id="prefs-form">
-              <div class="pref-list">
-                <label class="check"><input type="checkbox" name="newsletter"><span>Monthly newsletter</span></label>
-                <label class="check"><input type="checkbox" name="events"><span>Events and circles</span></label>
-                <label class="check"><input type="checkbox" name="volunteering"><span>Volunteer opportunities</span></label>
-              </div>
-            </form>
           </div>
         </div>
       </div>
@@ -216,10 +231,11 @@
     </div>
   </footer>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+  <script src="supabase-config.js"></script>
   <script src="main.js" defer></script>
   <script src="auth.js" defer></script>
   <script src="chat.js" defer></script>
-  <script src="events.js" defer></script>
-  <script src="account.js" defer></script>
+  <script src="signin.js" defer></script>
 </body>
 </html>
