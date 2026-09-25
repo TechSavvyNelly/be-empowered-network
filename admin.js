@@ -154,7 +154,7 @@
       id: evForm.id.value.trim(), title: evForm.title.value.trim(),
       starts_at: evForm.starts_at.value ? new Date(evForm.starts_at.value).toISOString() : null,
       ends_at: evForm.ends_at.value ? new Date(evForm.ends_at.value).toISOString() : null,
-      mode: evForm.mode.value, location: evForm.location.value.trim(),
+      mode: evForm.mode.value, type: evForm.type.value, location: evForm.location.value.trim(),
       summary: evForm.summary.value.trim()
     };
     if (!row.id || !row.title || !row.starts_at) { status(evForm, 'err', 'ID, title and start time are required.'); return; }

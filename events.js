@@ -92,13 +92,14 @@ window.EVENTS = [
   if (cards) {
     const M = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
     const T = { circle: 'Peer circle', campaign: 'Campaign', training: 'Training', webinar: 'Webinar' };
+    const label = function (t) { return T[t] || 'Event'; };
     const now = new Date(), limit = Number(cards.getAttribute('data-event-cards')) || 3;
     const up = window.EVENTS.filter(function (e) { return new Date(e.end) >= now; }).sort(function (a, b) { return a.start < b.start ? -1 : 1; }).slice(0, limit);
     cards.innerHTML = up.length ? '' : '<li class="empty-state"><p>No events scheduled yet. Check back soon.</p></li>';
     up.forEach(function (ev) {
       const d = new Date(ev.start); const li = document.createElement('li'); li.className = 'event-card reveal is-visible';
       li.innerHTML = '<div class="event-date"><span class="d">' + d.getDate() + '</span><span class="m">' + M[d.getMonth()] + '</span></div>' +
-        '<div><div class="event-meta"><span class="tag">' + (T[ev.type] || ev.type) + '</span><span>' + (ev.mode === 'online' ? 'Online' : 'In person') + '</span></div>' +
+        '<div><div class="event-meta"><span class="tag">' + label(ev.type) + '</span><span>' + (ev.mode === 'online' ? 'Online' : 'In person') + '</span></div>' +
         '<h3>' + ev.title + '</h3><p>' + ev.blurb.split('. ')[0] + '.</p><a href="events.html">Details &amp; RSVP →</a></div>';
       cards.appendChild(li);
     });
@@ -109,6 +110,7 @@ window.EVENTS = [
   const filters = document.querySelectorAll('[data-event-filter]');
   const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   const TYPE_LABEL = { circle: 'Peer circle', campaign: 'Campaign', training: 'Training', webinar: 'Webinar' };
+  const typeLabel = function (t) { return TYPE_LABEL[t] || 'Event'; };
   const ICON_PIN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>';
   const ICON_CLOCK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>';
   let filter = 'all';
@@ -151,7 +153,7 @@ window.EVENTS = [
       li.innerHTML =
         '<div class="event-date"><span class="d">' + d.getDate() + '</span><span class="m">' + MONTHS[d.getMonth()] + '</span><span class="y">' + d.getFullYear() + '</span></div>' +
         '<div class="event-body">' +
-          '<div class="event-meta"><span class="tag">' + (TYPE_LABEL[ev.type] || ev.type) + '</span><span>' + ICON_CLOCK + fmtTime(ev.start) + ' – ' + fmtTime(ev.end) + ' WAT</span><span>' + ICON_PIN + ev.location + '</span></div>' +
+          '<div class="event-meta"><span class="tag">' + typeLabel(ev.type) + '</span><span>' + ICON_CLOCK + fmtTime(ev.start) + ' – ' + fmtTime(ev.end) + ' WAT</span><span>' + ICON_PIN + ev.location + '</span></div>' +
           '<h3>' + ev.title + '</h3><p>' + ev.blurb + '</p>' +
         '</div>' +
         '<div class="event-actions">' +

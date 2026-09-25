@@ -71,6 +71,8 @@ create table if not exists public.events (
   ends_at      timestamptz,
   location     text,
   mode         text check (mode in ('online', 'in-person', 'hybrid')),
+  type         text not null default 'circle'
+                 check (type in ('circle', 'campaign', 'training', 'webinar')),
   capacity     integer,
   is_published boolean not null default true,
   created_at   timestamptz not null default now(),

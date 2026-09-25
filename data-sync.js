@@ -9,6 +9,22 @@
 (function () {
   'use strict';
 
+  var TYPES = ['circle', 'campaign', 'training', 'webinar'];
+
+  /* The type decides the tag on the card and which filter an event answers
+     to. Prefer the column; if the database has not been migrated yet, read
+     it off the slug (circle-*, training-*, wmhd-* ...), which is how the
+     ids have always been written. Guessing from `mode` is not good enough:
+     a training and a webinar are both online but neither is a circle. */
+  function eventType(row) {
+    if (row.type && TYPES.indexOf(row.type) !== -1) return row.type;
+    var id = String(row.id || '');
+    if (/^training-/.test(id)) return 'training';
+    if (/^webinar-/.test(id)) return 'webinar';
+    if (/^(wmhd|schools|campaign)-/.test(id)) return 'campaign';
+    return 'circle';
+  }
+
   function toEvent(row) {
     // Back to the shape events.js already knows how to render.
     var start = row.starts_at ? row.starts_at.slice(0, 16) : '';
@@ -16,7 +32,7 @@
     return {
       id: row.id, title: row.title, blurb: row.summary || '',
       start: start, end: end,
-      type: row.mode === 'online' ? 'circle' : 'event',
+      type: eventType(row),
       mode: row.mode || 'online',
       location: row.location || ''
     };
