@@ -8,3 +8,8 @@ Disallow: /signin.html
 Disallow: /newsletter.html
 
 Sitemap: https://beempowerednetwork.org/sitemap.xml
+
+# Draft guides awaiting review — also carry a noindex tag.
+Disallow: /free-mental-health-help-nigeria.html
+Disallow: /find-a-therapist-nigeria.html
+Disallow: /depression-help-nigeria.html
