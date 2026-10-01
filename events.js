@@ -201,5 +201,56 @@ window.EVENTS = [
     });
   });
 
-  boot(function () { refreshRsvps().then(render, render); });
+  /* Event structured data, built from whatever events are actually live
+     (database rows when Supabase answers, the built-in array otherwise) so
+     it can never drift from the page. Google reads JSON-LD that scripts
+     add to the DOM, and this is what can earn an event rich result. */
+  function publishEventSchema() {
+    const now = new Date();
+    const upcoming = window.EVENTS
+      .filter(function (e) { return new Date(e.end) >= now; })
+      .sort(function (a, b) { return a.start < b.start ? -1 : 1; });
+    if (!upcoming.length) return;
+    const SITE = 'https://beempowerednetwork.org';
+    const nodes = upcoming.map(function (ev) {
+      const online = ev.mode === 'online';
+      return {
+        '@type': 'Event',
+        '@id': SITE + '/events.html#' + ev.id,
+        name: ev.title,
+        description: ev.blurb,
+        startDate: ev.start,
+        endDate: ev.end,
+        eventStatus: 'https://schema.org/EventScheduled',
+        eventAttendanceMode: online
+          ? 'https://schema.org/OnlineEventAttendanceMode'
+          : 'https://schema.org/OfflineEventAttendanceMode',
+        location: online
+          ? { '@type': 'VirtualLocation', url: SITE + '/events.html' }
+          : { '@type': 'Place', name: ev.location,
+              address: { '@type': 'PostalAddress', addressCountry: 'NG' } },
+        organizer: { '@type': 'NGO', name: 'Be Empowered Network', url: SITE },
+        isAccessibleForFree: true,
+        offers: {
+          '@type': 'Offer', price: '0', priceCurrency: 'NGN',
+          availability: 'https://schema.org/InStock',
+          url: SITE + '/events.html',
+          validFrom: new Date().toISOString().slice(0, 10)
+        },
+        image: SITE + '/assets/og-card.jpg'
+      };
+    });
+    const el = document.createElement('script');
+    el.type = 'application/ld+json';
+    el.setAttribute('data-event-schema', '');
+    el.textContent = JSON.stringify({ '@context': 'https://schema.org', '@graph': nodes });
+    const prev = document.querySelector('[data-event-schema]');
+    if (prev) prev.remove();
+    document.head.appendChild(el);
+  }
+
+  boot(function () {
+    refreshRsvps().then(render, render);
+    publishEventSchema();
+  });
 })();
