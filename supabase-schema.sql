@@ -43,7 +43,11 @@ create or replace function public.guard_is_admin()
 returns trigger language plpgsql security definer set search_path = public as $$
 begin
   if new.is_admin is distinct from old.is_admin then
-    if not exists (select 1 from public.profiles p where p.id = auth.uid() and p.is_admin) then
+    -- Only guard real browser sessions. A null auth.uid() means the SQL
+    -- Editor, service_role or a migration, which is how the first admin is
+    -- created. RLS already stops anonymous visitors reaching this trigger.
+    if auth.uid() is not null
+       and not exists (select 1 from public.profiles p where p.id = auth.uid() and p.is_admin) then
       raise exception 'is_admin can only be changed by an admin';
     end if;
   end if;

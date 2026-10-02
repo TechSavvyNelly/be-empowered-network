@@ -52,12 +52,25 @@ provider (Twilio et al.) configured in Supabase → Authentication →
 Providers → Phone. Until then, treat stored phone numbers as unconfirmed;
 the `profiles.phone_verified` column is there for when you add it.
 
-## Known gap
+## Admin access
 
-`account.html` still runs the **old browser-local accounts** in `auth.js`
-(localStorage, from before Supabase). It does not share a session with
-`signin.html`. That's why signing in leaves you on `signin.html` with a
-confirmation panel rather than redirecting to the dashboard.
+`admin.html` is gated on `profiles.is_admin`, which is deliberately not
+settable from the browser. To create the first admin:
 
-Migrating `account.html` and `auth.js` onto Supabase — so RSVPs and email
-preferences read from `profiles` — is the next piece of work.
+1. Sign up at `/signin.html` with the address that should own the account
+   (the organisation uses `hello@beempowerednetwork.org`) and click the
+   confirmation link in the inbox.
+2. Run `supabase-migration-first-admin.sql` once in Supabase -> SQL Editor.
+3. Run `supabase-make-admin.sql`, which flips `is_admin` for that address
+   and prints the row back so you can confirm it worked.
+
+After that, an existing admin can promote others. Without step 2 nothing
+can be promoted at all: the original guard required you to already be an
+admin, including from the SQL Editor, so the first one could never exist.
+
+## Sessions
+
+Accounts are Supabase Auth throughout. The old browser-local `auth.js`
+(localStorage) has been removed; `api.js` now paints the header's
+`[data-account-link]` from the real session, so the header reflects
+whether someone is actually signed in and repaints on sign in and out.

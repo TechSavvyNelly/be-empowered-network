@@ -75,7 +75,6 @@ window.EVENTS = [
   }
   function isGoing(id) { return MY_RSVPS.indexOf(id) !== -1; }
   function toast(text) {
-    if (window.BenAuth && BenAuth.toast) return BenAuth.toast(text);
     var t = document.querySelector('.toast');
     if (!t) { t = document.createElement('div'); t.className = 'toast'; t.setAttribute('role', 'status'); document.body.appendChild(t); }
     t.textContent = text; t.setAttribute('data-show', 'true');

@@ -114,5 +114,36 @@
     }
   };
 
+  /* ---- header session state ----
+     Every page's header carries [data-account-link]. It used to be painted
+     by the old browser-local auth.js, which knew nothing about the Supabase
+     session, so the header still said "Sign in" to someone who was signed
+     in. Paint it from the real session instead, and repaint whenever that
+     session changes. */
+  async function paintAccountLink() {
+    var links = document.querySelectorAll('[data-account-link]');
+    if (!links.length) return;
+    var me = null;
+    try { me = await BenApi.user(); } catch (e) { me = null; }
+    links.forEach(function (a) {
+      a.setAttribute('href', me ? 'account.html' : 'signin.html');
+      a.textContent = me ? 'My account' : 'Sign in';
+    });
+  }
+  BenApi.paintAccountLink = paintAccountLink;
+
+  function startSessionPainting() {
+    paintAccountLink();
+    var c = sb();
+    if (c && c.auth && c.auth.onAuthStateChange) {
+      c.auth.onAuthStateChange(function () { paintAccountLink(); });
+    }
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', startSessionPainting);
+  } else {
+    startSessionPainting();
+  }
+
   window.BenApi = BenApi;
 })();
