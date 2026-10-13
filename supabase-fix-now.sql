@@ -70,26 +70,31 @@ create trigger profiles_guard_admin before update on public.profiles
 
 
 -- ------------------------------------------------------------
--- FIX 3 — make hello@beempowerednetwork.org an admin
+-- FIX 3 — make the organisation's account an admin
 --
--- This only works once that address has signed up at /signin.html
--- AND clicked the confirmation link in the inbox. If it has not yet,
--- this step is skipped with a notice and nothing else is affected —
--- sign up, then run this file again.
+--  >>> PUT YOUR ADMIN EMAIL ON THE LINE MARKED "admin_email" BELOW. <<<
+--
+-- It must be an address you can actually receive mail at, because you
+-- sign up with it at /signin.html and have to click a confirmation link.
+--
+-- This step only works once that address has signed up AND confirmed.
+-- If it has not yet, the step is skipped with a notice and nothing else
+-- is affected — sign up, then run this file again.
 -- ------------------------------------------------------------
 
 do $$
 declare
+  admin_email text := 'hello@beempowerednetwork.org';   -- <<< CHANGE THIS
   uid uuid;
 begin
   select id into uid from auth.users
-   where lower(email) = lower('hello@beempowerednetwork.org');
+   where lower(email) = lower(admin_email);
 
   if uid is null then
-    raise notice 'SKIPPED: hello@beempowerednetwork.org has not signed up yet. Sign up at /signin.html, confirm the email, then run this file again.';
+    raise notice 'SKIPPED: % has not signed up yet. Sign up at /signin.html, confirm the email, then run this file again.', admin_email;
   else
     update public.profiles set is_admin = true where id = uid;
-    raise notice 'OK: hello@beempowerednetwork.org is now an admin.';
+    raise notice 'OK: % is now an admin.', admin_email;
   end if;
 end $$;
 
