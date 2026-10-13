@@ -25,6 +25,9 @@ Static site on Railway; everything dynamic runs on Supabase
 # Supabase → SQL Editor, in this order:
 #   supabase-schema.sql      tables, RLS policies, triggers
 #   supabase-seed.sql        the 10 events and 17 directory entries
+#   supabase-fix-now.sql     adds events.type, unblocks the first admin,
+#                            grants admin to hello@ (run it again after
+#                            that address has signed up and confirmed)
 ```
 
 **2. Edge Functions**
