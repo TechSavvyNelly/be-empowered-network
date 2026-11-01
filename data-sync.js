@@ -13,7 +13,7 @@
 
   /* The type decides the tag on the card and which filter an event answers
      to. Prefer the column; if the database has not been migrated yet, read
-     it off the slug (circle-*, training-*, wmhd-* ...), which is how the
+     it off the slug (circle-*, training-*, wmhd-*, saw-* ...), which is how the
      ids have always been written. Guessing from `mode` is not good enough:
      a training and a webinar are both online but neither is a circle. */
   function eventType(row) {
@@ -21,7 +21,7 @@
     var id = String(row.id || '');
     if (/^training-/.test(id)) return 'training';
     if (/^webinar-/.test(id)) return 'webinar';
-    if (/^(wmhd|schools|campaign)-/.test(id)) return 'campaign';
+    if (/^(wmhd|schools|campaign|saw)-/.test(id)) return 'campaign';
     return 'circle';
   }
 

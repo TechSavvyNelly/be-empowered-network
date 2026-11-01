@@ -58,6 +58,24 @@ window.EVENTS = [
     blurb: 'A week of student assemblies and teacher sessions on stress, anxiety and where to get help, delivered with partner schools.'
   },
   {
+    id: 'saw-2023-12', title: 'Support A Widow 3.0',
+    start: '2023-12-23T10:00', end: '2023-12-23T16:00', type: 'campaign', mode: 'in-person',
+    location: 'Lagos',
+    blurb: 'A donation drive for food items, cash gifts and clothes, distributed to widows before Christmas.'
+  },
+  {
+    id: 'saw-2022-12', title: 'Support A Widow 2.0',
+    start: '2022-12-24T10:00', end: '2022-12-24T16:00', type: 'campaign', mode: 'in-person',
+    location: 'Lagos',
+    blurb: 'Packed food items, cash gifts and clothes, distributed to widows on Christmas Eve.'
+  },
+  {
+    id: 'saw-2021-12', title: 'Support A Widow 1.0',
+    start: '2021-12-24T10:00', end: '2021-12-24T16:00', type: 'campaign', mode: 'in-person',
+    location: 'Lagos',
+    blurb: 'The first edition: an appeal for food items and cash gifts, shared with widows on Christmas Eve.'
+  },
+  {
     id: 'wmhd-2024', title: 'World Mental Health Day 2024: Walk & Talk',
     start: '2024-10-12T08:00', end: '2024-10-12T11:00', type: 'campaign', mode: 'in-person',
     location: 'In person',

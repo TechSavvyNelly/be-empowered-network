@@ -2,7 +2,8 @@
 --  Be Empowered Network — run this once in Supabase → SQL Editor
 --  (Dashboard → SQL Editor → New query → paste → Run)
 --
---  Fixes the two things the live database is currently missing.
+--  Brings the live database up to date with the site, and loads the
+--  Support A Widow editions as event rows.
 --  Everything here is idempotent: running it twice is harmless.
 --  It prints a report at the end so you can see what happened.
 -- ============================================================
@@ -100,7 +101,92 @@ end $$;
 
 
 -- ------------------------------------------------------------
---  REPORT — check these three results
+-- FIX 4 — Support A Widow is not in the database at all
+--
+-- The initiative has its own page on the site, but none of its
+-- editions exist as event rows, so they never appear in the events
+-- list and staff cannot edit them in admin.html.
+--
+-- The three past editions below are dated from their own campaign
+-- flyers. Edition 4.0 (the MEBS Global business grants) is NOT here
+-- because nobody has given me its date yet — add it with the template
+-- at the bottom of this section once you know it.
+--
+-- Re-running this is safe: existing rows are updated, not duplicated.
+-- ------------------------------------------------------------
+
+insert into public.events
+  (id, title, summary, starts_at, ends_at, location, mode, type, is_published)
+values
+  ('saw-2021-12', 'Support A Widow 1.0',
+   'The first edition: an appeal for food items and cash gifts, shared with widows on Christmas Eve.',
+   '2021-12-24 10:00+01', '2021-12-24 16:00+01', 'Lagos', 'in-person', 'campaign', true),
+  ('saw-2022-12', 'Support A Widow 2.0',
+   'Packed food items, cash gifts and clothes, distributed to widows on Christmas Eve.',
+   '2022-12-24 10:00+01', '2022-12-24 16:00+01', 'Lagos', 'in-person', 'campaign', true),
+  ('saw-2023-12', 'Support A Widow 3.0',
+   'A donation drive for food items, cash gifts and clothes, distributed to widows before Christmas.',
+   '2023-12-23 10:00+01', '2023-12-23 16:00+01', 'Lagos', 'in-person', 'campaign', true)
+on conflict (id) do update set
+  title      = excluded.title,
+  summary    = excluded.summary,
+  starts_at  = excluded.starts_at,
+  ends_at    = excluded.ends_at,
+  location   = excluded.location,
+  mode       = excluded.mode,
+  type       = excluded.type,
+  updated_at = now();
+
+
+-- The edition coming this December.
+--
+--  >>> PUT THE REAL DATE ON THE "saw5_starts" LINE BELOW, THEN RUN. <<<
+--
+-- Left as null, this step is skipped and nothing else is affected, so
+-- you can run the file now and come back to it when the date is fixed.
+-- Do not invent a date: this row drives the countdown on the events
+-- page and the calendar file people download.
+
+do $$
+declare
+  saw5_starts timestamptz := null;   -- <<< e.g. '2026-12-19 10:00+01'
+  saw5_ends   timestamptz := null;   -- <<< e.g. '2026-12-19 15:00+01'
+  saw5_place  text        := 'Lagos (venue to be confirmed)';
+begin
+  if saw5_starts is null then
+    raise notice 'SKIPPED: Support A Widow 5.0 has no date yet. Set saw5_starts above and run this file again.';
+  else
+    insert into public.events
+      (id, title, summary, starts_at, ends_at, location, mode, type, is_published)
+    values
+      ('saw-2026-12', 'Support A Widow 5.0',
+       'Skills acquisition and digital awareness training, health assessments for 30 widows, and school fees and back-to-school kits for 30 children.',
+       saw5_starts, coalesce(saw5_ends, saw5_starts), saw5_place, 'in-person', 'campaign', true)
+    on conflict (id) do update set
+      title = excluded.title, summary = excluded.summary,
+      starts_at = excluded.starts_at, ends_at = excluded.ends_at,
+      location = excluded.location, updated_at = now();
+    raise notice 'OK: Support A Widow 5.0 is scheduled for %.', saw5_starts;
+  end if;
+end $$;
+
+
+-- Template for edition 4.0, once you know when it ran. Uncomment,
+-- set the date, and run again.
+--
+-- insert into public.events
+--   (id, title, summary, starts_at, ends_at, location, mode, type, is_published)
+-- values
+--   ('saw-4', 'Support A Widow 4.0',
+--    'N100,000 each to 25 widows running small businesses in Nigeria, with the support of MEBS Global.',
+--    '????-??-?? 10:00+01', '????-??-?? 16:00+01', 'Lagos', 'in-person', 'campaign', true)
+-- on conflict (id) do update set
+--   title = excluded.title, summary = excluded.summary,
+--   starts_at = excluded.starts_at, updated_at = now();
+
+
+-- ------------------------------------------------------------
+--  REPORT — check these four results
 -- ------------------------------------------------------------
 
 -- 1. Every event should now have a sensible type.
@@ -119,3 +205,9 @@ select u.email, p.is_admin
 from public.profiles p
 join auth.users u on u.id = p.id
 where p.is_admin;
+
+-- 4. The Support A Widow editions should be listed here.
+select id, title, starts_at::date as held_on, type, is_published
+from public.events
+where id like 'saw-%'
+order by starts_at;
