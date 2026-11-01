@@ -867,3 +867,92 @@ fieldset.field legend { font-size: var(--text-sm); font-weight: 600; margin-bott
 .faq-item summary:focus-visible { outline: 2px solid var(--color-primary); outline-offset: -2px; }
 .faq-answer { padding: 0 var(--space-6) var(--space-5); color: var(--color-text-muted); }
 .faq-answer p { margin: 0; }
+
+/* =====================================================================
+   Support A Widow — project page
+   ===================================================================== */
+
+/* Lead photograph */
+.saw-lead { margin: 0; }
+.saw-lead img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; object-position: 50% 42%; border-radius: var(--radius-xl); background: var(--color-surface-2); box-shadow: var(--shadow-md); }
+.saw-lead figcaption { margin-top: var(--space-3); font-size: var(--text-sm); color: var(--color-text-muted); }
+
+/* The three pillars of the December edition */
+.pillars { display: grid; gap: var(--space-4); }
+.pillar { position: relative; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-xl); padding: clamp(var(--space-6), 3vw, var(--space-8)); display: flex; flex-direction: column; gap: var(--space-3); }
+.pillar-n { font-family: var(--font-display); font-size: var(--text-lg); font-weight: 500; color: var(--color-primary); letter-spacing: 0.02em; }
+.pillar h3 { font-family: var(--font-display); font-size: var(--text-lg); font-weight: 500; }
+.pillar p { color: var(--color-text-muted); font-size: var(--text-sm); }
+@media (min-width: 860px) { .pillars { grid-template-columns: repeat(3, 1fr); } }
+
+/* Objectives + the headline numbers beside them */
+.saw-objectives { display: grid; gap: var(--space-8); margin-top: clamp(var(--space-10), 5vw, var(--space-16)); }
+.saw-objectives h3 { font-family: var(--font-display); font-size: var(--text-xl); font-variation-settings: 'opsz' 72, 'SOFT' 60; }
+.saw-objectives ul { list-style: none; padding: 0; margin-top: var(--space-5); display: grid; gap: var(--space-4); max-width: 58ch; }
+.saw-objectives li { padding-left: var(--space-5); border-left: 2px solid var(--brand-amber); color: var(--color-text-muted); }
+.saw-objectives li strong { color: var(--color-text); }
+.saw-objectives .form-note { margin-top: var(--space-6); }
+.saw-numbers { display: grid; gap: var(--space-3); align-content: start; }
+@media (min-width: 560px) { .saw-numbers { grid-template-columns: repeat(3, 1fr); } }
+
+/* Photo carousel. Without JS it stays a swipeable, scroll-snapped strip. */
+.slides { position: relative; }
+.slides-track { display: flex; gap: var(--space-4); overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; scrollbar-width: none; -ms-overflow-style: none; border-radius: var(--radius-xl); }
+.slides-track::-webkit-scrollbar { display: none; }
+.slides-track:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 4px; }
+.slide { flex: 0 0 100%; scroll-snap-align: center; margin: 0; min-width: 0; }
+.slide img { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; border-radius: var(--radius-xl); background: var(--color-surface-2); display: block; }
+.slide figcaption { margin-top: var(--space-3); font-size: var(--text-sm); color: var(--color-text-muted); min-height: 2.6em; }
+@media (min-width: 900px) { .slide { flex-basis: 74%; } }
+.slides-controls { display: flex; align-items: center; gap: var(--space-4); margin-top: var(--space-5); }
+.slides-btn { flex: none; border: 1px solid var(--color-border); background: var(--color-surface); }
+.slides-btn:hover { border-color: var(--color-text); background: var(--color-surface-2); }
+.slides-btn[disabled] { opacity: 0.35; pointer-events: none; }
+.slides-btn svg { width: 20px; height: 20px; }
+.slides-dots { display: flex; flex-wrap: wrap; gap: var(--space-2); flex: 1; }
+.slides-dots button { width: 9px; height: 9px; padding: 0; border: 0; border-radius: var(--radius-full); background: var(--color-text-faint); cursor: pointer; transition: width var(--transition-interactive), background var(--transition-interactive); }
+.slides-dots button[aria-selected="true"] { width: 28px; background: var(--color-primary); }
+.slides-dots button:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 3px; }
+@media (prefers-reduced-motion: reduce) { .slides-track { scroll-behavior: auto; } }
+
+/* Edition history */
+.editions { list-style: none; padding: 0; display: grid; gap: var(--space-4); }
+.edition { display: grid; gap: var(--space-5); align-items: center; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-xl); padding: var(--space-5); }
+.edition img { width: 100%; max-width: 220px; aspect-ratio: 1 / 1; object-fit: cover; object-position: 50% 20%; border-radius: var(--radius-lg); background: var(--color-surface-2); }
+.edition .when { font-family: var(--font-display); font-style: italic; color: var(--color-accent); font-size: var(--text-base); }
+.edition h3 { font-family: var(--font-display); font-size: var(--text-lg); font-weight: 500; margin-top: var(--space-1); }
+.edition p { color: var(--color-text-muted); font-size: var(--text-sm); margin-top: var(--space-2); }
+.edition--next { background: var(--color-primary-soft); border-color: transparent; }
+.edition-mark { width: 100%; max-width: 220px; aspect-ratio: 1 / 1; display: grid; place-items: center; border-radius: var(--radius-lg); font-family: var(--font-display); font-size: var(--text-2xl); font-weight: 500; color: #fff; background: linear-gradient(135deg, var(--brand-amber), var(--brand-coral) 55%, var(--brand-raspberry)); }
+@media (min-width: 720px) { .edition { grid-template-columns: 220px 1fr; gap: var(--space-8); padding: var(--space-6); } }
+
+/* Ways to give */
+.give-grid { display: grid; gap: var(--space-4); }
+.give-card { display: flex; flex-direction: column; gap: var(--space-3); background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-xl); padding: clamp(var(--space-6), 3vw, var(--space-8)); }
+.give-card h3 { font-family: var(--font-display); font-size: var(--text-lg); font-weight: 500; }
+.give-card p { color: var(--color-text-muted); font-size: var(--text-sm); }
+.give-card .btn { align-self: flex-start; }
+@media (min-width: 860px) { .give-grid { grid-template-columns: repeat(3, 1fr); } }
+
+/* Bank details */
+.bank { display: grid; gap: var(--space-3); margin: var(--space-2) 0; padding: var(--space-5); border-radius: var(--radius-lg); background: var(--color-surface-2); border: 1px solid var(--color-divider); }
+.bank > div { display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-4); justify-content: space-between; align-items: baseline; }
+.bank dt { font-size: var(--text-xs); text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-text-muted); font-weight: 600; }
+.bank dd { font-weight: 700; font-variant-numeric: tabular-nums; display: flex; align-items: center; gap: var(--space-3); }
+.copy-btn { font-size: var(--text-xs); font-weight: 700; color: var(--color-primary); border: 1px solid var(--color-border); border-radius: var(--radius-full); padding: var(--space-1) var(--space-3); background: var(--color-surface); cursor: pointer; }
+.copy-btn:hover { border-color: var(--color-primary); }
+
+/* Homepage spotlight for the initiative */
+.spotlight { display: grid; gap: var(--space-6); background: var(--color-primary-soft); border-radius: var(--radius-xl); overflow: hidden; }
+.spotlight img { width: 100%; height: 100%; min-height: 240px; object-fit: cover; }
+.spotlight > div { padding: clamp(var(--space-6), 4vw, var(--space-12)); padding-top: 0; }
+.spotlight h2 { font-family: var(--font-display); font-size: var(--text-xl); font-variation-settings: 'opsz' 144, 'SOFT' 60; letter-spacing: -0.015em; margin-top: var(--space-2); }
+.spotlight p { color: var(--color-text-muted); margin-top: var(--space-4); max-width: 52ch; }
+.spotlight .hero-actions { margin-top: var(--space-6); }
+@media (min-width: 860px) { .spotlight { grid-template-columns: 1fr 1.1fr; gap: 0; align-items: stretch; } .spotlight > div { padding: clamp(var(--space-8), 4vw, var(--space-12)); align-self: center; } .spotlight h2 { font-size: var(--text-2xl); } }
+
+/* "Coming this December" banner on the events page */
+.saw-notice { display: flex; flex-wrap: wrap; gap: var(--space-5); align-items: center; justify-content: space-between; margin-bottom: var(--space-6); padding: clamp(var(--space-5), 3vw, var(--space-8)); border-radius: var(--radius-xl); background: var(--color-primary-soft); }
+.saw-notice h3 { font-family: var(--font-display); font-size: var(--text-lg); font-weight: 500; margin-top: var(--space-1); }
+.saw-notice p { color: var(--color-text-muted); font-size: var(--text-sm); margin-top: var(--space-2); max-width: 62ch; }
+.saw-notice .btn { flex: none; }
