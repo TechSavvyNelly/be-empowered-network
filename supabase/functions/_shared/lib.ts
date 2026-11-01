@@ -70,7 +70,10 @@ export async function sendMail(opts: {
   replyTo?: string;
 }): Promise<string | null> {
   const key = Deno.env.get("RESEND_API_KEY");
-  const from = Deno.env.get("MAIL_FROM") ?? "Be Empowered Network <hello@beempowerednetwork.org>";
+  /* The SENDER must stay on the domain Resend has verified (DKIM is set up
+   for beempowerednetwork.org). Resend cannot send as a gmail.com address,
+   so this does not follow NOTIFY_TO. */
+  const from = Deno.env.get("MAIL_FROM") ?? "Be Empowered Network <noreply@beempowerednetwork.org>";
   if (!key) return "RESEND_API_KEY is not set";
 
   const r = await fetch("https://api.resend.com/emails", {
@@ -81,7 +84,10 @@ export async function sendMail(opts: {
       to: Array.isArray(opts.to) ? opts.to : [opts.to],
       subject: opts.subject,
       html: opts.html,
-      ...(opts.replyTo ? { reply_to: opts.replyTo } : {}),
+      /* Always set a reply-to. The sender is noreply@ on the verified
+         domain, which has no mailbox, so without this a reply would
+         bounce. Falls back to wherever staff mail is being read. */
+      reply_to: opts.replyTo ?? NOTIFY_TO(),
     }),
   });
   if (r.ok) return null;
@@ -103,4 +109,7 @@ export function wrap(title: string, inner: string, footer = "") {
 }
 
 export const SITE = () => Deno.env.get("SITE_URL") ?? "https://beempowerednetwork.org";
-export const NOTIFY_TO = () => Deno.env.get("NOTIFY_TO") ?? "hello@beempowerednetwork.org";
+/* Where staff notifications are delivered. Temporarily the Gmail account,
+   until the hello@ mailbox exists on the domain. Override without a
+   redeploy by setting the NOTIFY_TO secret in the Supabase dashboard. */
+export const NOTIFY_TO = () => Deno.env.get("NOTIFY_TO") ?? "beempowerednetwork@gmail.com";

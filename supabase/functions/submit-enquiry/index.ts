@@ -48,7 +48,7 @@ Deno.serve(async (req) => {
 
   if (error) {
     console.error("insert failed", error);
-    return json({ error: "We couldn't save your message. Please email hello@beempowerednetwork.org." }, 500, origin);
+    return json({ error: "We couldn't save your message. Please email beempowerednetwork@gmail.com." }, 500, origin);
   }
 
   const rows = [

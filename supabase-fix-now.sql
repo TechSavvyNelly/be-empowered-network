@@ -84,7 +84,7 @@ create trigger profiles_guard_admin before update on public.profiles
 
 do $$
 declare
-  admin_email text := 'hello@beempowerednetwork.org';   -- <<< CHANGE THIS
+  admin_email text := 'beempowerednetwork@gmail.com';   -- <<< CHANGE THIS
   uid uuid;
 begin
   select id into uid from auth.users
