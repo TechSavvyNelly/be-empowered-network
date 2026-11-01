@@ -58,7 +58,7 @@ the `profiles.phone_verified` column is there for when you add it.
 settable from the browser. To create the first admin:
 
 1. Sign up at `/signin.html` with the address that should own the account
-   (the organisation uses `beempowerednetwork@gmail.com`) and click the
+   (the organisation uses `hello@beempowerednetwork.org`) and click the
    confirmation link in the inbox.
 2. Run `supabase-migration-first-admin.sql` once in Supabase -> SQL Editor.
 3. Run `supabase-make-admin.sql`, which flips `is_admin` for that address

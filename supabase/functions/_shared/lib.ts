@@ -112,4 +112,4 @@ export const SITE = () => Deno.env.get("SITE_URL") ?? "https://beempowerednetwor
 /* Where staff notifications are delivered. Temporarily the Gmail account,
    until the hello@ mailbox exists on the domain. Override without a
    redeploy by setting the NOTIFY_TO secret in the Supabase dashboard. */
-export const NOTIFY_TO = () => Deno.env.get("NOTIFY_TO") ?? "beempowerednetwork@gmail.com";
+export const NOTIFY_TO = () => Deno.env.get("NOTIFY_TO") ?? "hello@beempowerednetwork.org";

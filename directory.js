@@ -42,7 +42,7 @@ window.DIRECTORY = [
     url: 'https://asidofoundation.com' },
   { name: 'Be Empowered Network', type: 'ngo', states: ['Nationwide'],
     offers: 'That\'s us: free peer support circles (in person and online), school, workplace and faith-leader programmes, and signposting to professional care.',
-    email: 'beempowerednetwork@gmail.com', url: 'get-help.html' },
+    email: 'hello@beempowerednetwork.org', url: 'get-help.html' },
   { name: 'Online therapy platforms', type: 'online', states: ['Nationwide'],
     offers: 'Several Nigerian platforms connect you with licensed therapists by video, voice or chat at lower cost than in-person clinics. Check that the therapist is registered and ask about fees before booking.',
     note: 'We are compiling a vetted list. Email us if you\'d like a recommendation for your budget.' }

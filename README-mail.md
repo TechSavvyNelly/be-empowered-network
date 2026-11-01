@@ -36,7 +36,7 @@ filtered. Add:
 
 | Type | Host | Value |
 |---|---|---|
-| TXT | `_dmarc` | `v=DMARC1; p=none; rua=mailto:beempowerednetwork@gmail.com; fo=1` |
+| TXT | `_dmarc` | `v=DMARC1; p=none; rua=mailto:hello@beempowerednetwork.org; fo=1` |
 
 `p=none` only *reports*, it doesn't reject — that's deliberate. Run it for
 two to four weeks, read the reports, and once you can see that all
@@ -51,8 +51,8 @@ never appear in client code or in git. Set it as an Edge Function secret:
 ```sh
 supabase secrets set \
   RESEND_API_KEY='<your resend key>' \
-  MAIL_FROM='Be Empowered Network <beempowerednetwork@gmail.com>' \
-  NOTIFY_TO='beempowerednetwork@gmail.com' \
+  MAIL_FROM='Be Empowered Network <hello@beempowerednetwork.org>' \
+  NOTIFY_TO='hello@beempowerednetwork.org' \
   SITE_URL='https://beempowerednetwork.org'
 ```
 
@@ -73,7 +73,7 @@ Host:        smtp.resend.com
 Port:        465
 Username:    resend
 Password:    <your Resend API key>
-Sender:      beempowerednetwork@gmail.com
+Sender:      hello@beempowerednetwork.org
 Sender name: Be Empowered Network
 ```
 

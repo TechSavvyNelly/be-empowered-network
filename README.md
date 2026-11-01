@@ -34,7 +34,7 @@ python3 -m http.server 4173
 
 ## Before launch — things to confirm or replace
 
-1. **Email address.** `beempowerednetwork@gmail.com` is a placeholder domain. Search-and-replace it
+1. **Email address.** `hello@beempowerednetwork.org` is a placeholder domain. Search-and-replace it
    in all six HTML files once you have the real address.
 2. **Helpline numbers** on `get-help.html`. `112` is Nigeria's national emergency number. The MANI
    (0809 111 6264) and NSPI (0806 210 6493) numbers must be verified against those organisations'
