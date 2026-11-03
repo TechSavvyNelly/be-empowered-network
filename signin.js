@@ -158,7 +158,10 @@
     setError(signup.email, er.ok ? '' : er.error);
     if (!er.ok) ok = false;
 
-    var pr = checkPhone(phoneRaw, true);
+    /* Phone is optional: an account does not need one, and asking for
+       more than the job requires is exactly what data minimisation is
+       about. Validate it only when something was actually typed. */
+    var pr = checkPhone(phoneRaw, false);
     setError(signup.phone, pr.ok ? '' : pr.error);
     if (!pr.ok) ok = false;
 

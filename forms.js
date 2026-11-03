@@ -54,6 +54,20 @@
       if (!payload.message || payload.message.length < 10) {
         fieldError(form, 'message', 'Please add a little more detail.'); bad = true;
       }
+
+      /* Consent is not optional and the form carries novalidate, so the
+         browser will not enforce it for us. An unticked box is absent
+         from FormData entirely, which is what we check for. */
+      var consentBox = form.querySelector('input[name="consent"]');
+      if (consentBox && !payload.consent) {
+        status(form, 'err', 'Please tick the consent box so we know we may store and reply to this.');
+        consentBox.focus();
+        return;
+      }
+      /* Record WHEN consent was given: being able to show that is part of
+         what the law asks for, not just getting the tick. */
+      if (payload.consent) payload.consent_at = new Date().toISOString();
+
       if (bad) { status(form, 'err', 'Please check the highlighted fields.'); return; }
 
       busy(form, true, 'Sending…');

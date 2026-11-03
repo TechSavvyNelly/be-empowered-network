@@ -17,7 +17,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,300..700,0..100;1,9..144,300..700,0..100&display=swap" rel="stylesheet">
   <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=5">
+  <link rel="stylesheet" href="styles.css?v=6">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -152,9 +152,9 @@
                   <span class="field-error"></span>
                 </div>
                 <div class="field">
-                  <label for="su-phone">Phone number</label>
-                  <input id="su-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="0803 123 4567" required>
-                  <span class="hint">Nigerian mobile, or include the country code for anywhere else.</span>
+                  <label for="su-phone">Phone number <span class="hint-inline">(optional)</span></label>
+                  <input id="su-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="0803 123 4567">
+                  <span class="hint">Only if you want a facilitator to be able to reach you about an event. Nigerian mobile, or include the country code for anywhere else.</span>
                   <span class="field-error"></span>
                 </div>
                 <div class="field">
@@ -165,11 +165,11 @@
                 </div>
                 <fieldset class="field">
                   <legend>Email me about</legend>
-                  <label class="check"><input type="checkbox" name="newsletter" checked><span>Monthly newsletter</span></label>
-                  <label class="check"><input type="checkbox" name="events" checked><span>Events and circles<small>Includes joining details for anything you RSVP to.</small></span></label>
+                  <label class="check"><input type="checkbox" name="newsletter"><span>Monthly newsletter</span></label>
+                  <label class="check"><input type="checkbox" name="events"><span>Events and circles<small>Announcements of new circles and events. Joining details for anything you RSVP to are sent either way, because they are part of the booking.</small></span></label>
                   <label class="check"><input type="checkbox" name="volunteering"><span>Volunteer opportunities</span></label>
                 </fieldset>
-                <label class="check"><input type="checkbox" name="consent" required><span>I agree that Be Empowered Network may store my details to run my account and send the emails I&rsquo;ve chosen.</span></label>
+                <label class="check consent"><input type="checkbox" name="consent" required><span>I agree that Be Empowered Network may store my details to run my account and send the emails I&rsquo;ve chosen, and I have read the <a href="privacy.html">privacy notice</a> and <a href="terms.html">terms of use</a>.<small>Accounts are for people aged 18 or over. You can delete yours at any time from your account page.</small></span></label>
                 <button class="btn btn--primary" type="submit">Create account</button>
                 <p class="form-status" role="alert" hidden></p>
               </form>
@@ -203,7 +203,7 @@
             <input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" class="hp">
             <span class="field-error"></span>
             <p class="form-status" role="status" aria-live="polite" hidden></p>
-            <p class="form-note">One email a month. Unsubscribe in one click.</p>
+            <p class="form-note">One email a month. Confirmation link first, unsubscribe in one click, your email address and nothing else. <a href="privacy.html">How we handle it</a>.</p>
           </form>
         </div>
         </div>
@@ -237,6 +237,12 @@
         </div>
       </div>
       <div class="footer-bottom">
+        <nav class="footer-legal" aria-label="Policies">
+          <a href="privacy.html">Privacy</a>
+          <a href="terms.html">Terms</a>
+          <a href="safeguarding.html">Safeguarding</a>
+          <a href="contact.html">Contact</a>
+        </nav>
         <span>© <span data-year>2026</span> Be Empowered Network. Incorporated Trustees, CAC/IT/NO 140796.</span>
         <span>This website does not provide emergency or clinical services. Lagos photo by <a href="https://www.flickr.com/photos/126887487@N04/15006436297" rel="noopener" target="_blank" style="color:inherit;">OpenUpEd</a>, CC BY 2.0.</span>
       </div>

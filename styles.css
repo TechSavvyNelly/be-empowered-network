@@ -429,7 +429,7 @@ a, button, [role="button"], input, textarea, select {
 .form-status { display: none; padding: var(--space-3) var(--space-4); border-radius: var(--radius-md); font-size: var(--text-sm); }
 .form-status[data-state="ok"] { display: block; background: var(--color-accent-soft); }
 .form-status[data-state="err"] { display: block; background: var(--color-coral-soft); color: var(--color-error); }
-@media (min-width: 720px) { .form--2col { grid-template-columns: 1fr 1fr; } .form--2col .field--full, .form--2col .form-note, .form--2col .form-status, .form--2col .btn { grid-column: span 2; } .form--2col .btn { justify-self: start; } }
+@media (min-width: 720px) { .form--2col { grid-template-columns: 1fr 1fr; } .form--2col .field--full, .form--2col .form-note, .form--2col .form-status, .form--2col .btn, .form--2col .consent { grid-column: span 2; } .form--2col .btn { justify-self: start; } }
 
 /* ---------- Contact ---------- */
 .contact-grid { display: grid; gap: var(--space-10); }
@@ -966,3 +966,39 @@ fieldset.field legend { font-size: var(--text-sm); font-weight: 600; margin-bott
 .video-figure video { width: 100%; height: auto; aspect-ratio: 16 / 9; display: block; border-radius: var(--radius-xl); background: #000; box-shadow: var(--shadow-lg); object-fit: cover; }
 .video-figure figcaption { margin-top: var(--space-4); font-size: var(--text-sm); color: oklch(0.85 0.02 350 / 0.7); }
 .video-figure a { color: var(--brand-amber); }
+
+/* ---- Callouts on the policy pages ---------------------------------- */
+/* A boxed aside inside .prose. The urgent variant carries the amber
+   accent so the "not an emergency service" box reads differently from
+   the ordinary summary box, without relying on colour alone: the
+   heading does the work for anyone who cannot see the tint. */
+.callout {
+  margin: var(--space-8) 0;
+  padding: clamp(var(--space-5), 3vw, var(--space-8));
+  border-radius: var(--radius-xl);
+  background: var(--color-primary-soft);
+  border: 1px solid var(--color-divider);
+}
+.callout > * + * { margin-top: var(--space-4); }
+.callout h2 { font-size: var(--text-lg); }
+.callout ul { margin-top: var(--space-4); }
+.callout--urgent { background: var(--color-accent-soft); border-color: var(--color-accent); }
+
+/* ---- Footer policy links ------------------------------------------- */
+.footer-legal { display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-5); margin-bottom: var(--space-3); }
+.footer-legal a { font-weight: 600; text-decoration: none; border-bottom: 1px solid transparent; }
+.footer-legal a:hover, .footer-legal a:focus-visible { border-bottom-color: currentColor; }
+
+/* ---- Consent checkbox on public forms ------------------------------ */
+/* Sits last in a form, above the button. It must never be pre-ticked:
+   consent that was not an active choice is not consent. */
+.consent { margin-top: var(--space-2); padding: var(--space-4); border-radius: var(--radius-lg); background: var(--color-surface-2); border: 1px solid var(--color-divider); }
+.consent span { font-size: var(--text-sm); line-height: 1.5; }
+.consent small { display: block; margin-top: var(--space-2); color: var(--color-text-muted); font-size: var(--text-xs); }
+
+/* ---- Data rights panel on the account page ------------------------- */
+.data-rights { display: grid; gap: var(--space-5); margin-top: var(--space-5); }
+.data-rights li { display: grid; gap: var(--space-2); justify-items: start; padding-bottom: var(--space-5); border-bottom: 1px solid var(--color-divider); }
+.data-rights li:last-child { border-bottom: 0; padding-bottom: 0; }
+.data-rights span { font-size: var(--text-sm); color: var(--color-text-muted); }
+.btn--sm { padding: var(--space-2) var(--space-4); font-size: var(--text-sm); }

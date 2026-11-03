@@ -12,7 +12,7 @@
   var EN = {
     'ui.launch':      'Talk to Bee',
     'ui.role':        'CBT companion · not a person, not therapy',
-    'ui.notice':      'If you’re in danger right now, call <a href="tel:112">112</a>. Bee is a self-help guide, not an emergency service.',
+    'ui.notice':      'If you’re in danger right now, call <a href="tel:112">112</a>. Bee is a self-help guide, not an emergency service. Some of what you type is sent to an AI service abroad to answer you — <a href="privacy.html#chat">how that works</a>. Please don’t type anything you’d rather keep private.',
     'ui.placeholder': 'Type here…',
     'ui.langSwitch':  'Pidgin',
     'ui.langSwitched':'<p>No wahala — I’ll speak Pidgin from now. You can switch back any time.</p>',
@@ -133,7 +133,7 @@
   var PCM = {
     'ui.launch':      'Talk to Bee',
     'ui.role':        'CBT companion · no be person, no be therapy',
-    'ui.notice':      'If danger dey now now, call <a href="tel:112">112</a>. Bee na self-help guide, no be emergency service.',
+    'ui.notice':      'If danger dey now now, call <a href="tel:112">112</a>. Bee na self-help guide, no be emergency service. Some wetin you type dey go AI service for abroad make e fit answer you — <a href="privacy.html#chat">see how e dey work</a>. No type anything wey you no want make person see.',
     'ui.placeholder': 'Type am here…',
     'ui.langSwitch':  'English',
     'ui.langSwitched':'<p>No problem — I go talk English from now. You fit change am back any time.</p>',

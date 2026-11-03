@@ -20,7 +20,7 @@
   panel.innerHTML =
     '<div class="chat-head"><img src="assets/mark.png" alt="" width="36" height="35"><div><strong>Bee</strong><small>CBT companion · not a person, not therapy</small></div>' +
     '<button class="icon-btn" type="button" data-chat-close aria-label="Close chat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>' +
-    '<div class="chat-notice">If you\'re in danger right now, call <a href="tel:112">112</a>. Bee is a self-help guide, not an emergency service.</div>' +
+    '<div class="chat-notice">If you\'re in danger right now, call <a href="tel:112">112</a>. Bee is a self-help guide, not an emergency service. Some of what you type is sent to an AI service abroad to answer you &mdash; <a href="privacy.html#chat">how that works</a>.</div>' +
     '<div class="chat-log" role="log" aria-live="polite" aria-relevant="additions"></div>' +
     '<div class="chat-chips" role="group" aria-label="Quick replies"></div>' +
     '<form class="chat-form" autocomplete="off"><label class="sr-only" for="chat-input">Your message</label><input id="chat-input" type="text" placeholder="Type here…" maxlength="500"><button type="submit" aria-label="Send"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></form>';
