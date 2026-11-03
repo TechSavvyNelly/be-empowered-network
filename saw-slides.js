@@ -76,24 +76,7 @@
   }
 
   /* Copy-to-clipboard for the account number. */
-  function copiers() {
-    document.querySelectorAll('[data-copy]').forEach(function (btn) {
-      btn.addEventListener('click', function () {
-        var value = btn.getAttribute('data-copy');
-        var done = function () {
-          var was = btn.textContent;
-          btn.textContent = 'Copied';
-          setTimeout(function () { btn.textContent = was; }, 1600);
-        };
-        if (navigator.clipboard && navigator.clipboard.writeText) {
-          navigator.clipboard.writeText(value).then(done, function () {});
-        }
-      });
-    });
-  }
-
   document.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('[data-slides]').forEach(init);
-    copiers();
   });
 })();

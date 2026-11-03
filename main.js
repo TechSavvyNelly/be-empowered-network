@@ -92,6 +92,18 @@
   const topicSel = document.getElementById('c-topic');
   if (topic && topicSel && [...topicSel.options].some(function (o) { return o.value === topic; })) topicSel.value = topic;
 
+  /* ---- Copy-to-clipboard buttons (bank details, etc.) ---- */
+  document.querySelectorAll('[data-copy]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      if (!navigator.clipboard || !navigator.clipboard.writeText) return;
+      navigator.clipboard.writeText(btn.getAttribute('data-copy')).then(function () {
+        const was = btn.textContent;
+        btn.textContent = 'Copied';
+        setTimeout(function () { btn.textContent = was; }, 1600);
+      }, function () {});
+    });
+  });
+
   /* ---- Footer year ---- */
   document.querySelectorAll('[data-year]').forEach(function (el) { el.textContent = new Date().getFullYear(); });
 })();
